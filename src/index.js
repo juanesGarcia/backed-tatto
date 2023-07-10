@@ -13,8 +13,7 @@ app.use(morgan('dev'))
 app.use(cookieParser());
 app.use(passport.initialize())
 app.use(express.json());
-app.use(cors({origin:CLIENT_URL,credentials:true,
-}))
+app.use(cors())
 
 //import routes 
 const authRoutes=require('./routes/users.routes')
