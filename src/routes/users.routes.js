@@ -19,10 +19,14 @@ const { validationMiddleware } = require("../middlewares/validation-middleware")
 const {userAuth} = require("../middlewares/users-middleware");
 
 
-router.get('/',res.json({
-    message: "esta ready ",
-}
-));
+router.get('/', (req, res) => {
+    const data = {
+      message: 'Hola, este es un objeto JSON',
+      date: new Date()
+    };
+  
+    res.json(data);
+  });
 
 router.get('/user',getUsers);
 router.get('/protected',userAuth,protected);
