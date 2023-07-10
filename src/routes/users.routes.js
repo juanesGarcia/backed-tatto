@@ -19,6 +19,11 @@ const { validationMiddleware } = require("../middlewares/validation-middleware")
 const {userAuth} = require("../middlewares/users-middleware");
 
 
+router.get('/',res.json({
+    message: "esta ready ",
+}
+));
+
 router.get('/user',getUsers);
 router.get('/protected',userAuth,protected);
 router.get('/logout',logout);
