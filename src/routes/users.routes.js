@@ -11,6 +11,7 @@ const {
     verifyToken
 
 } =require("../controllers/usersController")
+const pool = require("../constants/db");
 const router = Router();
 const {
     registerValidator, 
@@ -19,14 +20,15 @@ const { validationMiddleware } = require("../middlewares/validation-middleware")
 const {userAuth} = require("../middlewares/users-middleware");
 
 
-router.get('/', (req, res) => {
-    const data = {
-      message: 'Hola, este es un objeto JSON',
-      date: new Date()
-    };
-  
-    res.json(data);
-  });
+router.get('/',async(req, res) => {
+    try {
+     const result = await pool.query('select now()');
+      res.json(result.rows)
+    } catch (error) {
+        console.log(error.message)
+    }
+   
+} );
 
 router.get('/user',getUsers);
 router.get('/protected',userAuth,protected);
