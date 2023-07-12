@@ -59,7 +59,7 @@ const login= async (req,res)=>{
         id: user.id,
         email: user.email,
         name: user.name, 
-        password:user.id
+        password:user.password,
     }
     
     try {
