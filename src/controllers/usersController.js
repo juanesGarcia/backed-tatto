@@ -58,7 +58,8 @@ const login= async (req,res)=>{
     payload={
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.name, 
+        password:user.id
     }
     
     try {
