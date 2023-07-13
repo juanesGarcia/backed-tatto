@@ -105,48 +105,72 @@ const logout =async(req, res) => {
     }
 }
 
-const updateUser =async(req,res)=>{
-    const {id} = req.params;
-    const {email,password,name} = req.body;
+const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { email, password, name } = req.body;
+    const userId = req.user.id; // ID del usuario autenticado
+  
     try {
-
-        await pool.query('update users set name = $1 ,email= $2 , passaword $3  where id=$4',[ name,email,password,id])
-        if(!result.rows.length){
-            return res.status(404).json({
-                message:"user not found "
-            })
-        }
-        res.json({
-            success:true,
-            message:"user was found and update"
-        })
+      if (userId !== id) {
+        return res.status(401).json({ message: 'No tienes permiso para editar este perfil.' });
+      }
+  
+      await pool.query('UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4', [
+        name,
+        email,
+        password,
+        id
+      ]);
+  
+      res.json({
+        success: true,
+        message: 'Perfil actualizado correctamente.'
+      });
     } catch (error) {
-        console.log(error.message)
-        return res.status(500).json({
-            error:error.message
-        })
+      console.log(error.message);
+      return res.status(500).json({
+        error: error.message
+      });
     }
-
-}
-
-const deleteUser =async(req,res)=>{
-
-    const {id} = req.params;
+  };
+  
+  module.exports = {
+    updateUser
+  };
+  
+  const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id; // ID del usuario autenticado
+  
     try {
-     const result = await pool.query('delete from users where id = $1',[id]);
-     if(!result.rowCount[0].length){
+      if (userId !== id) {
+        return res.status(401).json({ message: 'No tienes permiso para eliminar este usuario.' });
+      }
+  
+      const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
+  
+      if (result.rowCount === 0) {
         return res.status(404).json({
-            message:"user not found "
-        })
+          message: 'Usuario no encontrado.'
+        });
+      }
+  
+      res.json({
+        success: true,
+        message: 'Usuario encontrado y eliminado.'
+      });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({
+        error: error.message
+      });
     }
-    res.json({
-        success:true,
-        message:"user was found and delete"
-    })
-     }catch (error) { 
-        console.log(error.message)
-    }
-}
+  };
+  
+  module.exports = {
+    deleteUser
+  };
+  
 
 const verifyToken = async (req, res) => {
     const {token} = req.body;
