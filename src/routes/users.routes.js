@@ -35,7 +35,7 @@ router.get('/protected',userAuth,protected);
 router.get('/logout',logout);
 router.post('/register',registerValidator,validationMiddleware,register);
 router.post('/login',loginValidation,validationMiddleware,login);
-router.put('/user/:id',userAuth,registerValidator,updateUser);
+router.put('/user/:id',userAuth,registerValidator,validationMiddleware,updateUser);
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 
