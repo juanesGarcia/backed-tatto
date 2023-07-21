@@ -115,11 +115,12 @@ const updateUser = async (req, res) => {
       if (userId !== id) {
         return res.status(401).json({ message: 'No tienes permiso para editar este perfil.' });
       }
+      const hashedPassword = await hash(password,10)
   
       await pool.query('UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4', [
         name,
         email,
-        password,
+        hashedPassword,
         id
       ]);
   
