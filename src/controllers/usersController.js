@@ -17,8 +17,9 @@ const getUsers =async(req, res) => {
 }
 const getUser =async(req, res) => {
     const {id} = req.params;
+    console.log(id)
     try {
-     const result = await pool.query('select * from users where id = $1',[id]);
+     const result = await pool.query('select name,email from users where id = $1',[id]);
      if(!result.rows.length){
         return res.status(404).json({
             message:"user not found "
@@ -26,7 +27,8 @@ const getUser =async(req, res) => {
     }
     res.json({
         success:true,
-        message:"user was found"
+        message:"user was found",
+        info: result.rows,
     })
      }catch (error) { 
         console.log(error.message)
@@ -59,7 +61,6 @@ const login= async (req,res)=>{
         id: user.id,
         email: user.email,
         name: user.name, 
-        password:user.password,
     }
     
     try {
@@ -110,6 +111,8 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     const { email, password, name } = req.body;
     const userId = req.user.id; // ID del usuario autenticado
+    console.log(id);
+    console.log(email,password,name);
   
     try {
       if (userId !== id) {

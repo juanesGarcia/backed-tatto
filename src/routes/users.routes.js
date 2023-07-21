@@ -36,9 +36,10 @@ router.get('/protected',userAuth,protected);
 router.get('/logout',logout);
 router.post('/register',registerValidator,validationMiddleware,register);
 router.post('/login',loginValidation,validationMiddleware,login);
-router.put('/user/:id',userAuth,updateValidator,validationMiddleware,updateUser);
+router.put('/user/:id',userAuth,updateValidator,updateUser);
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
+router.get('/user/:id',getUser);
 
 
 
