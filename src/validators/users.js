@@ -45,5 +45,6 @@ const loginCheck = check('email').custom(async(value, {req})=>{
 module.exports={
   registerValidator: [password,email,emailExist,name],
   loginValidation:[loginCheck],
+  updateValidator:[password]
 }
 

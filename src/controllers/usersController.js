@@ -105,6 +105,7 @@ const logout =async(req, res) => {
     }
 }
 
+
 const updateUser = async (req, res) => {
     const { id } = req.params;
     const { email, password, name } = req.body;
@@ -134,10 +135,6 @@ const updateUser = async (req, res) => {
     }
   };
   
-  module.exports = {
-    updateUser
-  };
-  
   const deleteUser = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id; // ID del usuario autenticado
@@ -165,10 +162,6 @@ const updateUser = async (req, res) => {
         error: error.message
       });
     }
-  };
-  
-  module.exports = {
-    deleteUser
   };
   
 
