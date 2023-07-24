@@ -1,6 +1,8 @@
 const { check } = require("express-validator");
 const db = require("../constants/db");
 const { compare } = require("bcryptjs");
+
+
 const password= check('password')
   .isLength({ min: 8 ,max:15})
   .withMessage('La contraseña debe tener al menos 8 caracteres')
@@ -11,7 +13,9 @@ const password= check('password')
 
   const name= check('name')
   .isLength({ min: 3 ,max:30})
-  .withMessage('el nombre debe tener al menos 3 caracteres');
+  .withMessage('el nombre debe tener al menos 3 caracteres')
+  .matches(/^[^\s]+$/, 'i')
+  .withMessage('El nombre no debe contener espacios en blanco.');
 
   const email = check('email')
   .isEmail()
@@ -45,6 +49,6 @@ const loginCheck = check('email').custom(async(value, {req})=>{
 module.exports={
   registerValidator: [password,email,emailExist,name],
   loginValidation:[loginCheck],
-  updateValidator:[password,email,name],
+  updateValidator:[password,email,name]
 }
 
