@@ -37,6 +37,7 @@ const getUser =async(req, res) => {
 }
 const register =async(req, res) => {
     const {email,password,name} = req.body;
+    console.log(email)
     try {
         const id= v4()
         const hashedPassword = await hash(password,10)
@@ -46,7 +47,6 @@ const register =async(req, res) => {
             message: " the registracion was succefull",
         })
     } catch (error) {
-        console.log(error.message)
         return res.status(500).json({
             error:error.message
         })
