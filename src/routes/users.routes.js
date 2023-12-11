@@ -23,7 +23,7 @@ const {userAuth} = require("../middlewares/users-middleware");
 
 router.get('/',async(req, res) => {
     try {
-     const result = await pool.query('select now()');
+     const result = await pool.query('  select  * from users ');
       res.json(result.rows)
     } catch (error) {
         console.log(error.message)
