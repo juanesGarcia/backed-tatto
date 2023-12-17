@@ -6,6 +6,8 @@ const passport = require('passport');
 const cors = require('cors')
 const {CLIENT_URL}= require('./constants')
 
+
+
 require('./middlewares/passport-middleware')
 PORT=4000;
 app.use(morgan('dev'))
@@ -14,16 +16,16 @@ app.use(cookieParser());
 app.use(passport.initialize())
 app.use(express.json());
 app.use(cors({
-    origin: true,
+    origin: true,//'http://tattopro.com'
     credentials: true
   }));
   
 
 //import routes 
-const authRoutes=require('./routes/users.routes')
+const authRoutes=require('./routes/users.routes');
+
 
 app.use(authRoutes);
-
 
 const appStart =()=>{
     try {

@@ -4,11 +4,11 @@ const { compare } = require("bcryptjs");
 
 
 const password= check('password')
-  .isLength({ min: 8 ,max:15})
+  .isLength({ min: 6 ,max:15})
   .withMessage('La contraseña debe tener al menos 8 caracteres')
-  .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/)
+  .matches(/^(?=.*[a-z])(?=.*\d)[a-zA-Z\d]+$/)
   .withMessage(
-  'La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número'
+  'La contraseña debe contener al menos una letra minúscula y un número'
   );
 
   const name= check('name')

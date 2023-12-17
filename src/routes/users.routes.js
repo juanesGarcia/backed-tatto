@@ -1,3 +1,4 @@
+
 const { Router } = require("express");
 const {
     getUsers,
@@ -8,11 +9,21 @@ const {
     getUser, 
     updateUser,
     deleteUser,
-    verifyToken
+    verifyToken,
+    uploadImages,
+    getImages,
+    getUrls,
+    
 
 } =require("../controllers/usersController")
 const pool = require("../constants/db");
 const router = Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
+
+
 const {
     registerValidator, 
     loginValidation,
@@ -40,6 +51,11 @@ router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUser
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
+router.post('/upload',upload.single('photo'),uploadImages);
+router.get('/images',getImages)
+router.get('/images/:imageName',getUrls)
+
+
 
 
 
