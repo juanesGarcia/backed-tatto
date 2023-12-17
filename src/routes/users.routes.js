@@ -52,7 +52,6 @@ router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
 router.post('/upload',upload.single('photo'),uploadImages);
-router.get('/images',getImages)
 router.get('/images/:imageName',getUrls)
 
 

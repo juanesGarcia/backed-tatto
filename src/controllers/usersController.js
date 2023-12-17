@@ -7,6 +7,8 @@ const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
 const { getFiles , getFileUrl} =require("../s3")
 const { uploadFiles} =require("../firabase")
+const fs = require('fs');
+const path = require('path');
 
 const getUsers =async(req, res) => {
     try {
@@ -192,7 +194,7 @@ const verifyToken = async (req, res) => {
     }
   };
   
-    const uploadImages =async(req, res) =>{
+  const uploadImages =async(req, res) =>{
         const result =await uploadFiles(req.file)
         console.log(result)
         
@@ -205,17 +207,22 @@ const verifyToken = async (req, res) => {
         res.json({
           message: 'photo insertada correctamente.'
         });
+        clearAndRecreateUploadsFolder();
           
         } catch (error) {
           console.log(error.message)
         }
     } 
 
-  const getImages =async(req,res) =>{
-    const result =await getFiles ()
-    res.send(result.Contents)
+const clearAndRecreateUploadsFolder = () => {
+  const folderPath = path.join(__dirname, '..', '..', 'uploads'); // Ajusta según la estructura de tu proyecto
 
-} 
+  // Borra la carpeta uploads
+  fs.rmSync(folderPath, { recursive: true, force: true });
+
+  // Crea la carpeta uploads de nuevo
+  fs.mkdirSync(folderPath);
+};
 
 const getUrls =async(req,res) =>{
   console.log(req.params.imageName)
@@ -228,26 +235,8 @@ const getUrls =async(req,res) =>{
  )
 
 } 
-const insertImageUrl = async (name, url, expirationTime) => {
-  // Inserta una nueva fila con la URL y la fecha de expiración
-  const result = await pool.query(
-    'INSERT INTO photo (name,media_url, expiration_time) VALUES ($1, $2, $3)',
-    [name, url, expirationTime]
-  );
 
-  console.log(`Image URL inserted into the database: ${url}`);
-};
 
-const checkAndRenewUrls = async () => {
-  // Obtén las URLs de la base de datos
-  const photos = await pool.query('SELECT * FROM photos');
-  
-  // Itera sobre las fotos y verifica si es necesario renovar la URL
-  for (const photo of photos.rows) {
-    const expirationTime = new Date(photo.expiration_time);
-    const currentTime = new Date();
-  }
-};
 
 
 module.exports ={
@@ -261,9 +250,6 @@ module.exports ={
     deleteUser,
     verifyToken,
     uploadImages,
-    getImages, 
     getUrls,
-    insertImageUrl,
-    checkAndRenewUrls,
 
 }
