@@ -5,10 +5,10 @@ const {hash} = require('bcryptjs');
 const { SECRET } = require("../constants");
 const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
-const { getFiles , getFileUrl} =require("../s3")
 const { uploadFiles} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
+const { param } = require("express-validator");
 
 const getUsers =async(req, res) => {
     try {
@@ -195,14 +195,17 @@ const verifyToken = async (req, res) => {
   };
   
   const uploadImages =async(req, res) =>{
+        const {id} = req.params;
+        console.log(req.params)
         const result =await uploadFiles(req.file)
         console.log(result)
         
         try {
-          const resulf= await pool.query('INSERT INTO photos (name, media_url, expiration_time) VALUES ($1, $2, $3)', [
+          await pool.query('INSERT INTO photos (name, media_url, expiration_time,user_id) VALUES ($1, $2, $3,$4)', [
          req.file.originalname,
          result.url,
-         result.expires
+         result.expires,
+         id
         ]);
         res.json({
           message: 'photo insertada correctamente.'
@@ -224,17 +227,25 @@ const clearAndRecreateUploadsFolder = () => {
   fs.mkdirSync(folderPath);
 };
 
-const getUrls =async(req,res) =>{
-  console.log(req.params.imageName)
-  const result =await getFileUrl(req.params.imageName)
-
- res.json({
-  url: result
- }
-  
- )
-
-} 
+const getImages = async (req,res) =>{
+  const {id} = req.params;
+  console.log(id)
+  try {
+   const result = await pool.query('select id,name,media_url from photos where user_id = $1',[id]);
+   if(!result.rows.length){
+      return res.status(404).json({
+          message:"user not found "
+      })
+  }
+  res.json({
+      success:true,
+      message:"user was found",
+      info: result.rows,
+  })
+   }catch (error) { 
+      console.log(error.message)
+  }
+}
 
 
 
@@ -250,6 +261,6 @@ module.exports ={
     deleteUser,
     verifyToken,
     uploadImages,
-    getUrls,
+    getImages
 
 }

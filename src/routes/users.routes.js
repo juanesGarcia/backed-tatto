@@ -11,8 +11,8 @@ const {
     deleteUser,
     verifyToken,
     uploadImages,
-    getImages,
-    getUrls,
+    getImages
+
     
 
 } =require("../controllers/usersController")
@@ -51,8 +51,9 @@ router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUser
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
-router.post('/upload',upload.single('photo'),uploadImages);
-router.get('/images/:imageName',getUrls)
+router.post('/upload/:id',upload.single('photo'),uploadImages);
+router.get('/getimages/:id',getImages)
+
 
 
 
