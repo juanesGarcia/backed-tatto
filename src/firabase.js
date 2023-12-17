@@ -53,9 +53,12 @@ const uploadFiles = async (file) => {
         expires: '01-01-2030', // Definir una fecha de caducidad
       });
   
-      console.log('URL del archivo:', url);
+     
   
-      return url;
+      return {
+        url:url,
+        expires: '01-01-2030',
+      }
     } catch (error) {
       console.error("Error al subir el archivo a Firebase Storage:", error);
       throw error;

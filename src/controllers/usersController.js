@@ -195,6 +195,20 @@ const verifyToken = async (req, res) => {
     const uploadImages =async(req, res) =>{
         const result =await uploadFiles(req.file)
         console.log(result)
+        
+        try {
+          const resulf= await pool.query('INSERT INTO photos (name, media_url, expiration_time) VALUES ($1, $2, $3)', [
+         req.file.originalname,
+         result.url,
+         result.expires
+        ]);
+        res.json({
+          message: 'photo insertada correctamente.'
+        });
+          
+        } catch (error) {
+          console.log(error.message)
+        }
     } 
 
   const getImages =async(req,res) =>{
