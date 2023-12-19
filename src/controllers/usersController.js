@@ -194,29 +194,48 @@ const verifyToken = async (req, res) => {
     }
   };
   
-  const uploadImages =async(req, res) =>{
-        const {id} = req.params;
-        console.log(req.params)
-        const result =await uploadFiles(req.file)
-        console.log(result)
-        
-        try {
-          await pool.query('INSERT INTO photos (name, media_url, expiration_time,user_id) VALUES ($1, $2, $3,$4)', [
-         req.file.originalname,
-         result.url,
-         result.expires,
-         id
-        ]);
-        res.json({
-          message: 'photo insertada correctamente.'
-        });
-        clearAndRecreateUploadsFolder();
-          
-        } catch (error) {
-          console.log(error.message)
-        }
-    } 
-
+  const uploadImages = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.params);
+    console.log(req.files); // Ahora es req.files en lugar de req.file
+  
+    try {
+      // Iterar sobre cada archivo y subirlo
+      const uploadResults = await Promise.all(
+        req.files.map(async (file) => {
+          const result = await uploadFiles(file);
+          return {
+            originalname: file.originalname,
+            url: result.url,
+            expires: result.expires,
+          };
+        })
+      );
+  
+      // Iterar sobre los resultados y realizar la inserción en la base de datos
+      await Promise.all(
+        uploadResults.map(async (result) => {
+          await pool.query('INSERT INTO photos (name, media_url, expiration_time, user_id) VALUES ($1, $2, $3, $4)', [
+            result.originalname,
+            result.url,
+            result.expires,
+            id,
+          ]);
+        })
+      );
+  
+      res.json({
+        message: 'Fotos insertadas correctamente.',
+      });
+      clearAndRecreateUploadsFolder();
+    } catch (error) {
+      console.error('Error al subir las fotos:', error);
+      res.status(500).json({
+        error: 'Error al subir las fotos.',
+      });
+    }
+  };
+  
 const clearAndRecreateUploadsFolder = () => {
   const folderPath = path.join(__dirname, '..', '..', 'uploads'); // Ajusta según la estructura de tu proyecto
 

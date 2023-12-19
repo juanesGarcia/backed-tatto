@@ -51,7 +51,7 @@ router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUser
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
-router.post('/upload/:id',upload.single('photo'),uploadImages);
+router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)
 
 
