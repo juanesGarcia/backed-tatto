@@ -9,6 +9,7 @@ const { uploadFiles} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
 const { param } = require("express-validator");
+const { create } = require("domain");
 
 const getUsers =async(req, res) => {
     try {
@@ -196,7 +197,8 @@ const verifyToken = async (req, res) => {
   
   const uploadImages = async (req, res) => {
     const { id } = req.params;
-    console.log(req.params);
+    const{description}= req.body
+    
   
     try {
       // Iterar sobre cada archivo y subirlo
@@ -210,11 +212,12 @@ const verifyToken = async (req, res) => {
           };
         })
       );
-  
+      const fechaHoraActual = new Date();
+console.log(fechaHoraActual);
       // Insertar el post
       const postResult = await pool.query(
         'INSERT INTO posts (title, user_id, status) VALUES ($1, $2, $3) RETURNING id, title, created_at',
-        ['Nuevo Post', id, 'activo']
+        [description, id, 'activo']
       );
   
       const post = postResult.rows[0];
@@ -273,7 +276,7 @@ const getImages = async (req, res) => {
   try {
     // Obtener todos los posts y las fotos asociadas al usuario
     const result = await pool.query(
-      'SELECT p.id AS post_id, p.title, p.user_id, ph.id AS photo_id, ph.name, ph.media_url FROM posts p LEFT JOIN photos ph ON p.id = ph.post_id WHERE p.user_id = $1',
+      'SELECT p.id AS post_id, p.title, p.user_id,p.created_at, ph.id AS photo_id, ph.name, ph.media_url FROM posts p LEFT JOIN photos ph ON p.id = ph.post_id WHERE p.user_id = $1',
       [id]
     );
 
@@ -284,7 +287,6 @@ const getImages = async (req, res) => {
       });
     }
 
-    // Organizar la información en un formato deseado (puedes ajustarlo según tus necesidades)
     const userData = {
       user_id: result.rows[0].user_id,
       posts: [],
@@ -299,6 +301,7 @@ const getImages = async (req, res) => {
         userData.posts.push({
           post_id: row.post_id,
           title: row.title,
+          created_at: row.created_at,
           photos: [
             {
               photo_id: row.photo_id,
