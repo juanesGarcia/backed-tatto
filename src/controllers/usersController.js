@@ -197,7 +197,6 @@ const verifyToken = async (req, res) => {
   const uploadImages = async (req, res) => {
     const { id } = req.params;
     console.log(req.params);
-    console.log(req.files); // Ahora es req.files en lugar de req.file
   
     try {
       // Iterar sobre cada archivo y subirlo
@@ -212,21 +211,42 @@ const verifyToken = async (req, res) => {
         })
       );
   
+      // Insertar el post
+      const postResult = await pool.query(
+        'INSERT INTO posts (title, user_id, status) VALUES ($1, $2, $3) RETURNING id, title, created_at',
+        ['Nuevo Post', id, 'activo']
+      );
+  
+      const post = postResult.rows[0];
+      const postId = post.id;
+      console.log(postId);
+  
       // Iterar sobre los resultados y realizar la inserción en la base de datos
       await Promise.all(
         uploadResults.map(async (result) => {
-          await pool.query('INSERT INTO photos (name, media_url, expiration_time, user_id) VALUES ($1, $2, $3, $4)', [
+          // Insertar la foto
+          await pool.query('INSERT INTO photos (name, media_url, post_id) VALUES ($1, $2, $3)', [
             result.originalname,
             result.url,
-            result.expires,
-            id,
+            postId
           ]);
         })
       );
   
+      // Obtener información completa del post con fotos
+      const postWithPhotos = await pool.query(
+        'SELECT p.*, ph.name AS photo_name, ph.media_url AS photo_url ' +
+        'FROM posts p ' +
+        'LEFT JOIN photos ph ON p.id = ph.post_id ' +
+        'WHERE p.id = $1',
+        [postId]
+      );
+  
       res.json({
         message: 'Fotos insertadas correctamente.',
+        post: postWithPhotos.rows[0], // Devuelve el post con la información de las fotos
       });
+  
       clearAndRecreateUploadsFolder();
     } catch (error) {
       console.error('Error al subir las fotos:', error);
@@ -235,6 +255,7 @@ const verifyToken = async (req, res) => {
       });
     }
   };
+  
   
 const clearAndRecreateUploadsFolder = () => {
   const folderPath = path.join(__dirname, '..', '..', 'uploads'); // Ajusta según la estructura de tu proyecto
@@ -246,26 +267,69 @@ const clearAndRecreateUploadsFolder = () => {
   fs.mkdirSync(folderPath);
 };
 
-const getImages = async (req,res) =>{
-  const {id} = req.params;
-  console.log(id)
-  try {
-   const result = await pool.query('select id,name,media_url from photos where user_id = $1',[id]);
-   if(!result.rows.length){
-      return res.status(404).json({
-          message:"user not found "
-      })
-  }
-  res.json({
-      success:true,
-      message:"user was found",
-      info: result.rows,
-  })
-   }catch (error) { 
-      console.log(error.message)
-  }
-}
+const getImages = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    // Obtener todos los posts y las fotos asociadas al usuario
+    const result = await pool.query(
+      'SELECT p.id AS post_id, p.title, p.user_id, ph.id AS photo_id, ph.name, ph.media_url FROM posts p LEFT JOIN photos ph ON p.id = ph.post_id WHERE p.user_id = $1',
+      [id]
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No se encontraron posts para el usuario.",
+      });
+    }
+
+    // Organizar la información en un formato deseado (puedes ajustarlo según tus necesidades)
+    const userData = {
+      user_id: result.rows[0].user_id,
+      posts: [],
+    };
+
+    // Iterar sobre los resultados y organizar la información
+    result.rows.forEach((row) => {
+      const postIndex = userData.posts.findIndex((post) => post.post_id === row.post_id);
+
+      // Si el post aún no está en la lista, agregarlo
+      if (postIndex === -1) {
+        userData.posts.push({
+          post_id: row.post_id,
+          title: row.title,
+          photos: [
+            {
+              photo_id: row.photo_id,
+              name: row.name,
+              media_url: row.media_url,
+            },
+          ],
+        });
+      } else {
+        // Si el post ya está en la lista, agregar la foto a la lista de fotos del post
+        userData.posts[postIndex].photos.push({
+          photo_id: row.photo_id,
+          name: row.name,
+          media_url: row.media_url,
+        });
+      }
+    });
+
+    res.json({
+      success: true,
+      message: "Información de usuario y posts recuperada correctamente.",
+      info: userData,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error al recuperar la información del usuario y los posts.",
+    });
+  }
+};
 
 
 
