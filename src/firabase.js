@@ -22,7 +22,7 @@ const uploadFiles = async (file) => {
 
     // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
-      .resize({ width: 800, height: 800, fit: 'cover' })  // Ajusta los tamaños según tus necesidades
+      .resize({ width: 800, height: 900, fit: 'cover' })  // Ajusta los tamaños según tus necesidades
       .toBuffer();
 
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
@@ -51,6 +51,7 @@ const uploadFiles = async (file) => {
     });
 
     return {
+      uniqueFilename,
       url: url,
       expires: '01-01-2030',
     };
@@ -60,7 +61,23 @@ const uploadFiles = async (file) => {
   }
 };
 
+const deleteFileByName = async (filename) => {
+  try {
+    // Crear una referencia al archivo en Firebase Storage
+    const fileRef = bucket.file(filename);
+
+    // Eliminar el archivo
+    await fileRef.delete();
+
+    console.log(`Archivo eliminado con éxito: ${filename}`);
+  } catch (error) {
+    console.error(`Error al eliminar el archivo ${filename}:`, error);
+    throw error;
+  }
+};
+
 module.exports = {
-  uploadFiles
+  uploadFiles,
+  deleteFileByName
 };
 

@@ -5,11 +5,9 @@ const {hash} = require('bcryptjs');
 const { SECRET } = require("../constants");
 const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
-const { uploadFiles} =require("../firabase")
+const { uploadFiles,deleteFileByName} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
-const { param } = require("express-validator");
-const { create } = require("domain");
 
 const getUsers =async(req, res) => {
     try {
@@ -206,20 +204,17 @@ const verifyToken = async (req, res) => {
         req.files.map(async (file) => {
           const result = await uploadFiles(file);
           return {
-            originalname: file.originalname,
+            originalname: result.uniqueFilename,
             url: result.url,
             expires: result.expires,
           };
         })
       );
-      const fechaHoraActual = new Date();
-console.log(fechaHoraActual);
-      // Insertar el post
       const postResult = await pool.query(
         'INSERT INTO posts (title, user_id, status) VALUES ($1, $2, $3) RETURNING id, title, created_at',
         [description, id, 'activo']
       );
-  
+    
       const post = postResult.rows[0];
       const postId = post.id;
       console.log(postId);
@@ -254,7 +249,7 @@ console.log(fechaHoraActual);
     } catch (error) {
       console.error('Error al subir las fotos:', error);
       res.status(500).json({
-        error: 'Error al subir las fotos.',
+        error: error,
       });
     }
   };
@@ -334,6 +329,50 @@ const getImages = async (req, res) => {
   }
 };
 
+const deleteImages = async (req, res) => {
+  const { postId } = req.params;
+  console.log(postId)
+  try {
+    // Obtener información de las imágenes antes de eliminarlas
+    const imagesToDelete = await pool.query('SELECT id,name,media_url FROM photos WHERE post_id = $1', [postId]);
+
+    // Eliminar imágenes de la base de datos
+    await pool.query('DELETE FROM photos WHERE post_id = $1', [postId]);
+    await pool.query('DELETE FROM posts WHERE id = $1', [postId]);
+
+    // Eliminar archivos físicos del almacenamiento (opcional, dependiendo de tus necesidades)
+    await Promise.all(
+      imagesToDelete.rows.map(async (image) => {
+        if (image.name) {
+          await deleteFileByName(image.name);
+        }
+      })
+    );
+
+    res.json({
+      message: 'Imágenes eliminadas correctamente.',
+    });
+  } catch (error) {
+    console.error('Error al eliminar imágenes:', error);
+    res.status(500).json({
+      error: error,
+    });
+  }
+};
+
+const editarTitleImages = async (req, res) => {
+  const { postId } = req.params;
+  const { newDescription } = req.body;
+  console.log(newDescription)
+
+  try {
+    const postTitleEdit = await pool.query('UPDATE posts SET title=$1 where id= $2', [newDescription,postId]);
+    console.log(postTitleEdit)
+  } catch (error) {
+    
+  }
+}
+
 
 
 module.exports ={
@@ -347,6 +386,8 @@ module.exports ={
     deleteUser,
     verifyToken,
     uploadImages,
-    getImages
+    getImages,
+    deleteImages,
+    editarTitleImages
 
 }

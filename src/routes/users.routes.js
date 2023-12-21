@@ -11,7 +11,9 @@ const {
     deleteUser,
     verifyToken,
     uploadImages,
-    getImages
+    getImages, 
+    deleteImages,
+    editarTitleImages
 
     
 
@@ -53,6 +55,8 @@ router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
 router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)
+router.delete('/deleteimages/:postId', deleteImages);
+router.put('/editar/:postId',editarTitleImages);
 
 
 
