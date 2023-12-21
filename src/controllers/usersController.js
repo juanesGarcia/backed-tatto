@@ -115,7 +115,7 @@ const updateUser = async (req, res) => {
     const { email, password, name } = req.body;
     const userId = req.user.id; // ID del usuario autenticado
     console.log(id);
-    console.log(email,password,name);
+    console.log(name);
   
     try {
       if (userId !== id) {
