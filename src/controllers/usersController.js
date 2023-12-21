@@ -368,6 +368,9 @@ const editarTitleImages = async (req, res) => {
   try {
     const postTitleEdit = await pool.query('UPDATE posts SET title=$1 where id= $2', [newDescription,postId]);
     console.log(postTitleEdit)
+    res.json({
+      message: 'descripcion actualizada correctamente.',
+    });
   } catch (error) {
     
   }
