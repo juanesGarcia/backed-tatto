@@ -11,7 +11,7 @@ const path = require('path');
 
 const getUsers =async(req, res) => {
     try {
-     const result = await pool.query('select (id,name) from users');
+     const result = await pool.query('select (id,name,rol) from users');
       res.json(result.rows)
     } catch (error) {
         console.log(error.message)
