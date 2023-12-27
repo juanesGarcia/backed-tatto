@@ -65,6 +65,8 @@ const login= async (req,res)=>{
         id: user.id,
         email: user.email,
         name: user.name, 
+        phone:user.phone,
+        rol:user.rol,
     }
     
     try {
