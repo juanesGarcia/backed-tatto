@@ -22,7 +22,7 @@ const getUser =async(req, res) => {
     const {id} = req.params;
     console.log(id)
     try {
-     const result = await pool.query('select name,email from users where id = $1',[id]);
+     const result = await pool.query('select (name,email,rol) from users where id = $1',[id]);
      if(!result.rows.length){
         return res.status(404).json({
             message:"user not found "
