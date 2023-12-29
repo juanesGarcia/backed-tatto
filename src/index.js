@@ -15,11 +15,10 @@ app.use(morgan('dev'))
 app.use(cookieParser());
 app.use(passport.initialize())
 app.use(express.json());
-const corsOptions = {
-    origin: 'https://tattopro.com',
-    credentials: true,
-  };
-  app.use(cors(corsOptions));
+app.use(cors({
+    origin: true,//'http://tattopro.com'
+    credentials: true
+  }));
   
 
 //import routes 
