@@ -16,7 +16,8 @@ const {
     editarTitleImages,
     follow, 
     followed,
-    follower
+    follower,
+    checkFollowingStatus
 
     
 
@@ -63,7 +64,7 @@ router.put('/editar/:postId',editarTitleImages);
 router.post('/followUser',follow)
 router.get('/followed/:id',followed);
 router.get('/follower/:id',follower);
-
+router.post('/checkfollowing',checkFollowingStatus);
 
 
 
