@@ -399,6 +399,28 @@ const follow = async (req, res) =>{
 
 }
 
+const follower = async (req, res) =>{
+  const {id} = req.params;
+  try {
+    const result = await pool.query('SELECT u.name AS follower_name FROM follows f JOIN users u ON f.follower_user_id = u.id WHERE f.followed_user_id = $1',[id]);
+    if(!result.rows.length){
+       return res.status(404).json({
+           message:"dont have follower  "
+       })
+   }
+   res.json({
+       info: result.rows,
+   })
+    }catch (error) { 
+       console.log(error.message)
+   }
+
+}
+
+const followed = async (req, res)=>{
+
+}
+
 
 module.exports ={
     getUsers,
@@ -415,5 +437,7 @@ module.exports ={
     deleteImages,
     editarTitleImages,
     follow,
+    follower,
+    followed,
 
 }

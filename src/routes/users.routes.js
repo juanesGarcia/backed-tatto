@@ -14,7 +14,9 @@ const {
     getImages, 
     deleteImages,
     editarTitleImages,
-    follow
+    follow, 
+    followed,
+    follower
 
     
 
@@ -59,6 +61,8 @@ router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);
 router.put('/editar/:postId',editarTitleImages);
 router.post('/followUser',follow)
+router.get('/followed/:id',followed);
+router.get('/follower/:id',follower);
 
 
 
