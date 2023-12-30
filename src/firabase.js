@@ -20,12 +20,23 @@ const uploadFiles = async (file) => {
     // Crear una referencia al archivo en Firebase Storage con el nombre único
     const storageRef = bucket.file(uniqueFilename);
 
-    // Redimensionar la imagen usando sharp antes de subirla
-    const resizedBuffer = await sharp(file.path)
-      .resize({ width: 800, height: 1000, fit: 'cover' })  // Ajusta los tamaños según tus necesidades
-      .toBuffer();
+    let resizedBuffer;
 
-    // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
+    // Verificar si el archivo es una imagen o un video
+    if (file.mimetype.startsWith('image')) {
+      // Redimensionar la imagen usando sharp antes de subirla
+      resizedBuffer = await sharp(file.path)
+        .resize({ width: 1080, height: 1080, fit: 'cover' })
+        .toFormat('jpeg') // o 'png'
+        .toBuffer();
+    } else if (file.mimetype.startsWith('video')) {
+      // No redimensionar videos, simplemente leer el buffer del archivo
+      resizedBuffer = require('fs').readFileSync(file.path);
+    } else {
+      throw new Error('Formato de archivo no admitido.');
+    }
+
+    // Crear un flujo de escritura para cargar el archivo en Storage
     const writeStream = storageRef.createWriteStream({
       metadata: {
         contentType: file.mimetype,
@@ -60,6 +71,7 @@ const uploadFiles = async (file) => {
     throw error;
   }
 };
+
 
 const deleteFileByName = async (filename) => {
   try {
