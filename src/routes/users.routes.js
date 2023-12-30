@@ -59,7 +59,7 @@ router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);
 router.put('/editar/:postId',editarTitleImages);
 router.post('/followUser',follow)
-app.get('/profile/:userId/:username', (req, res) => {
+router.get('/profile/:userId/:username', (req, res) => {
 
   });
 
