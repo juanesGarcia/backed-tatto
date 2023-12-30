@@ -44,10 +44,6 @@ router.get('/',async(req, res) => {
     }
    
 } );
-router.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'index.html'));
-  });
-  
 
 router.get('/user',getUsers);
 router.get('/protected',userAuth,protected);
@@ -63,9 +59,7 @@ router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);
 router.put('/editar/:postId',editarTitleImages);
 router.post('/followUser',follow)
-router.get('/profile/:userId/:username', (req, res) => {
 
-  });
 
 
 
