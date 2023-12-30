@@ -148,6 +148,8 @@ const updateUser = async (req, res) => {
   const deleteUser = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id; // ID del usuario autenticado
+
+    console.log(id)
   
     try {
       if (userId !== id) {
@@ -381,7 +383,20 @@ const editarTitleImages = async (req, res) => {
 
 
 const follow = async (req, res) =>{
-  console.log(req)
+  const {follower_id,followed_id} = req.body;
+  try {
+
+    await pool.query('insert into follows (follower_user_id,followed_user_id) values ($1, $2) ',[ follower_id,followed_id])
+    return res.status(201).json({
+        success: true,
+        message: " the registracion was succefull",
+    })
+} catch (error) {
+    return res.status(500).json({
+        error:error.message
+    })
+}
+
 }
 
 
