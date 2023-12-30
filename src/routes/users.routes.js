@@ -13,7 +13,8 @@ const {
     uploadImages,
     getImages, 
     deleteImages,
-    editarTitleImages
+    editarTitleImages,
+    follow
 
     
 
@@ -57,6 +58,7 @@ router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);
 router.put('/editar/:postId',editarTitleImages);
+router.post('/followUser',follow)
 
 
 

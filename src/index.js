@@ -19,7 +19,11 @@ app.use(cors({
     origin: true,//'http://tattopro.com'
     credentials: true
   }));
-  
+  /*const corsOptions = {
+    origin: 'https://tattopro.com',
+    credentials: true,
+  };
+  app.use(cors(corsOptions));*/
 
 //import routes 
 const authRoutes=require('./routes/users.routes');

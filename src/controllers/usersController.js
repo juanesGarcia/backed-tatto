@@ -380,6 +380,10 @@ const editarTitleImages = async (req, res) => {
 }
 
 
+const follow = async (req, res) =>{
+  console.log(req)
+}
+
 
 module.exports ={
     getUsers,
@@ -394,6 +398,7 @@ module.exports ={
     uploadImages,
     getImages,
     deleteImages,
-    editarTitleImages
+    editarTitleImages,
+    follow,
 
 }
