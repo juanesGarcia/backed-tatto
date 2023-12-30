@@ -26,7 +26,7 @@ const uploadFiles = async (file) => {
     if (file.mimetype.startsWith('image')) {
       // Redimensionar la imagen usando sharp antes de subirla
       resizedBuffer = await sharp(file.path)
-        .resize({ width: 1080, height: 1080, fit: 'cover' })
+        .resize({ width: 1080})
         .toFormat('jpeg') // o 'png'
         .toBuffer();
     } else if (file.mimetype.startsWith('video')) {
