@@ -47,6 +47,7 @@ router.get('/',async(req, res) => {
 router.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'index.html'));
   });
+  
 
 router.get('/user',getUsers);
 router.get('/protected',userAuth,protected);
