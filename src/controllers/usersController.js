@@ -419,8 +419,10 @@ const follower = async (req, res) =>{
 }
 
 const followed = async (req, res)=>{
+  const {id} = req.params;
+  console.log(id)
   try {
-    const result = await pool.query('SELECT EXISTS (SELECT 1 FROM follows WHERE follower_user_id = $1 AND followed_user_id = $2) AS sigue_al_usuario');
+    const result = await pool.query('SELECT u.name AS followed_name FROM follows f JOIN users u ON f.followed_user_id = u.id WHERE f.follower_user_id = $1',[id]);
     console.log(result)
    res.json({
        info: result.rows
@@ -442,6 +444,7 @@ const checkFollowingStatus = async (req,res) => {
    }
 
 };
+
 
 module.exports ={
     getUsers,
