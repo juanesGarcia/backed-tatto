@@ -384,6 +384,7 @@ const editarTitleImages = async (req, res) => {
 
 const follow = async (req, res) =>{
   const {follower_id,followed_id} = req.body;
+
   try {
 
     await pool.query('insert into follows (follower_user_id,followed_user_id) values ($1, $2) ',[ follower_id,followed_id])
@@ -401,14 +402,14 @@ const follow = async (req, res) =>{
 
 const follower = async (req, res) =>{
   const {id} = req.params;
-  console.log(id)
+
   try {
     const result = await pool.query('SELECT u.name AS follower_name FROM follows f JOIN users u ON f.follower_user_id = u.id WHERE f.followed_user_id = $1',[id]);
-    if(!result.rows.length){
+    /*if(!result.rows.length){
        return res.status(404).json({
            message:"dont have follower  "
        })
-   }
+   }*/
    res.json({
        info: result.rows
    })
@@ -420,10 +421,9 @@ const follower = async (req, res) =>{
 
 const followed = async (req, res)=>{
   const {id} = req.params;
-  console.log(id)
+
   try {
     const result = await pool.query('SELECT u.name AS followed_name FROM follows f JOIN users u ON f.followed_user_id = u.id WHERE f.follower_user_id = $1',[id]);
-    console.log(result)
    res.json({
        info: result.rows
    })
@@ -438,7 +438,10 @@ const checkFollowingStatus = async (req,res) => {
   const {followed_id,follower_id}=req.body
   try {
     const result = await pool.query('SELECT EXISTS (SELECT 1 FROM follows WHERE follower_user_id = $1 AND followed_user_id = $2) AS sigue_al_usuario',[follower_id,followed_id]);
-     return result 
+    res.json({
+      info: result.rows
+  })
+   
     }catch (error) { 
        console.log(error.message)
    }
