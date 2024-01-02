@@ -404,7 +404,7 @@ const follower = async (req, res) =>{
   const {id} = req.params;
 
   try {
-    const result = await pool.query('SELECT u.name AS follower_name, u.id AS follower.id FROM follows f JOIN users u ON f.follower_user_id = u.id WHERE f.followed_user_id = $1',[id]);
+    const result = await pool.query('SELECT u.name AS follower_name, u.id AS follower_id FROM follows f JOIN users u ON f.follower_user_id = u.id WHERE f.followed_user_id = $1',[id]);
 
    res.json({
        info: result.rows
