@@ -280,13 +280,6 @@ const getImages = async (req, res) => {
       [id]
     );
 
-    if (!result.rows.length) {
-      return res.status(404).json({
-        success: false,
-        message: "No se encontraron posts para el usuario.",
-      });
-    }
-
     const userData = {
       user_id: result.rows[0].user_id,
       posts: [],
