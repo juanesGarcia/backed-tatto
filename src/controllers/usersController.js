@@ -400,6 +400,23 @@ const follow = async (req, res) =>{
 
 }
 
+const unfollow = async (req, res) => {
+  const { follower_id, followed_id } = req.body;
+
+  try {
+    await pool.query('DELETE FROM follows WHERE follower_user_id = $1 AND followed_user_id = $2', [follower_id, followed_id]);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Unfollow successful',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 const follower = async (req, res) =>{
   const {id} = req.params;
 
@@ -463,5 +480,6 @@ module.exports ={
     follower,
     followed,
     checkFollowingStatus,
+    unfollow,
 
 }
