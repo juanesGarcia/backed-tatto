@@ -279,6 +279,17 @@ const getImages = async (req, res) => {
       'SELECT p.id AS post_id, p.title, p.user_id,p.created_at, ph.id AS photo_id, ph.name, ph.media_url FROM posts p LEFT JOIN photos ph ON p.id = ph.post_id WHERE p.user_id = $1',
       [id]
     );
+    if (result.rows.length === 0) {
+      // Si no hay resultados, devolver un array vacío
+      return res.json({
+        success: true,
+        message: "El usuario no tiene posts ni imágenes asociadas.",
+        info: {
+          user_id: id,
+          posts: [],
+        },
+      });
+    }
 
     const userData = {
       user_id: result.rows[0].user_id,
