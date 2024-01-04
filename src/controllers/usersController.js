@@ -482,12 +482,12 @@ const reactions = async (req,res) => {
 }
 
 const unreaction = async (req, res) => {
-  const { reactor_id, reacted_to_user_id, post_id, reaction_type } = req.body;
+  const { reactor_id, post_id} = req.body;
 
   try {
     await pool.query(
-      'DELETE FROM reactions WHERE reactor_id = $1 AND reacted_to_user_id = $2 AND post_id = $3 AND reaction_type = $4',
-      [reactor_id, reacted_to_user_id, post_id, reaction_type]
+      'DELETE FROM reactions WHERE reactor_id = $1 AND post_id = $2',
+      [reactor_id, post_id]
     );
 
     return res.status(200).json({
