@@ -465,6 +465,25 @@ const checkFollowingStatus = async (req,res) => {
 
 };
 
+const reactions = async (req,res) => {
+  const {reactor_id, reacted_to_user_id,  post_id, reaction_type} = req.body
+
+  try {
+    await pool.query('insert into reactions (reactor_id, reacted_to_user_id,  post_id, reaction_type) values ($1,$2,$3,$4) ',[ reactor_id, reacted_to_user_id,  post_id, reaction_type])
+    return res.status(201).json({
+        success: true,
+        message: " the registracion was succefull",
+    })
+    
+  } catch (error) {
+    
+  }
+
+}
+
+
+
+
 
 module.exports ={
     getUsers,
@@ -485,5 +504,6 @@ module.exports ={
     followed,
     checkFollowingStatus,
     unfollow,
+    reactions
 
 }
