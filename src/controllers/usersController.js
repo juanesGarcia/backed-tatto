@@ -482,15 +482,15 @@ const reactions = async (req,res) => {
 }
 const checkreactions = async (req,res) => {
   const {reactor_id, post_id} = req.body
+  console.log(reactor_id, post_id)
 
   try {
-   const result= await pool.query(' SELECT COUNT(*) AS reaction_count FROM reactions WHERE reactor_id = $1: AND post_id = $2;',[ reactor_id,post_id])
+   const result= await pool.query(' SELECT COUNT(*) AS reaction_count FROM reactions WHERE reactor_id = $1 AND post_id = $2;',[ reactor_id,post_id])
     res.json({
       info: result.rows
   })
-    
   } catch (error) {
-    
+    console.log(error)
   }
 
 }
