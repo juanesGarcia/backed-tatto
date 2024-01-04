@@ -504,13 +504,15 @@ const unreaction = async (req, res) => {
 };
 
 const getReaction = async (req, res) => {
-  const {post_id} = req.params;
+  const {id} = req.params;
+  console.log('get reaccions',id)
   
   try {
-    const result = await pool.query('SELECT users.id , users.name FROM users JOIN reactions ON users.id = reactions.reactor_id WHERE reactions.post_id = $1',[post_id]);
+    const result = await pool.query('SELECT users.id , users.name FROM users JOIN reactions ON users.id = reactions.reactor_id WHERE reactions.post_id = $1',[id]);
    res.json({
        info: result.rows
    })
+   console.log(result.rows)
     }catch (error) { 
        console.log(error.message)
    }
@@ -519,7 +521,6 @@ const getReaction = async (req, res) => {
 
 const checkreactions = async (req,res) => {
   const {reactor_id, post_id} = req.body
-  console.log(reactor_id, post_id)
 
   try {
    const result= await pool.query(' SELECT COUNT(*) AS reaction_count FROM reactions WHERE reactor_id = $1 AND post_id = $2;',[ reactor_id,post_id])
