@@ -503,6 +503,20 @@ const unreaction = async (req, res) => {
   }
 };
 
+const getReaction = async (req, res) => {
+  const {post_id} = req.params;
+  
+  try {
+    const result = await pool.query('SELECT users.id , users.name FROM users JOIN reactions ON users.id = reactions.reactor_id WHERE reactions.post_id = $1',[post_id]);
+   res.json({
+       info: result.rows
+   })
+    }catch (error) { 
+       console.log(error.message)
+   }
+}
+
+
 const checkreactions = async (req,res) => {
   const {reactor_id, post_id} = req.body
   console.log(reactor_id, post_id)
@@ -545,6 +559,7 @@ module.exports ={
     unfollow,
     reactions,
     checkreactions,
-    unreaction
+    unreaction,
+    getReaction
 
 }

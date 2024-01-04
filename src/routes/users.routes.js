@@ -21,7 +21,8 @@ const {
     unfollow,
     reactions,
     checkreactions,
-    unreaction
+    unreaction,
+    getReaction
 
     
 
@@ -73,6 +74,7 @@ router.post('/checkfollowing',checkFollowingStatus);
 router.post('/reactions',reactions);
 router.post('/checkreactions',checkreactions);
 router.post('/unreaction',unreaction);
+router.get('/getreactions/:id',getReaction);
 
 
 
