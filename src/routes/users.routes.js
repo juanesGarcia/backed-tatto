@@ -19,7 +19,8 @@ const {
     follower,
     checkFollowingStatus,
     unfollow,
-    reactions
+    reactions,
+    checkreactions
 
     
 
@@ -69,7 +70,7 @@ router.get('/followed/:id',followed);
 router.get('/follower/:id',follower);
 router.post('/checkfollowing',checkFollowingStatus);
 router.post('/reactions',reactions);
-
+router.post('/checkreactions',checkreactions);
 
 
 

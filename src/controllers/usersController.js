@@ -480,6 +480,22 @@ const reactions = async (req,res) => {
   }
 
 }
+const checkreactions = async (req,res) => {
+  const {reactor_id, post_id} = req.body
+
+  try {
+   const result= await pool.query(' SELECT COUNT(*) AS reaction_count FROM reactions WHERE reactor_id = $1: AND post_id = $2;',[ reactor_id,post_id])
+    res.json({
+      info: result.rows
+  })
+    
+  } catch (error) {
+    
+  }
+
+}
+
+
 
 
 
@@ -504,6 +520,7 @@ module.exports ={
     followed,
     checkFollowingStatus,
     unfollow,
-    reactions
+    reactions,
+    checkreactions
 
 }
