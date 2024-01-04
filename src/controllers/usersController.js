@@ -480,6 +480,29 @@ const reactions = async (req,res) => {
   }
 
 }
+
+const unreaction = async (req, res) => {
+  const { reactor_id, reacted_to_user_id, post_id, reaction_type } = req.body;
+
+  try {
+    await pool.query(
+      'DELETE FROM reactions WHERE reactor_id = $1 AND reacted_to_user_id = $2 AND post_id = $3 AND reaction_type = $4',
+      [reactor_id, reacted_to_user_id, post_id, reaction_type]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'The unreaction was successful.',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while unreaction.',
+    });
+  }
+};
+
 const checkreactions = async (req,res) => {
   const {reactor_id, post_id} = req.body
   console.log(reactor_id, post_id)
@@ -521,6 +544,7 @@ module.exports ={
     checkFollowingStatus,
     unfollow,
     reactions,
-    checkreactions
+    checkreactions,
+    unreaction
 
 }
