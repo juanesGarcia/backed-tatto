@@ -117,6 +117,9 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     const { email, password, name } = req.body;
     const userId = req.user.id; // ID del usuario autenticado
+    const currentTime = new Date();
+    console.log(currentTime);
+    
     console.log(id);
     console.log(name);
   
@@ -126,12 +129,15 @@ const updateUser = async (req, res) => {
       }
       const hashedPassword = await hash(password,10)
   
-      await pool.query('UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4', [
+      await pool.query('UPDATE users SET name = $1, email = $2, password = $3,updated_at = $4 WHERE id = $5', [
         name,
         email,
         hashedPassword,
+        currentTime,
         id
       ]);
+
+      
   
       res.json({
         success: true,
@@ -372,10 +378,13 @@ const deleteImages = async (req, res) => {
 const editarTitleImages = async (req, res) => {
   const { postId } = req.params;
   const { newDescription } = req.body;
+  const currentTime = new Date();
+console.log(currentTime);
+
   console.log(newDescription)
 
   try {
-    const postTitleEdit = await pool.query('UPDATE posts SET title=$1 where id= $2', [newDescription,postId]);
+    const postTitleEdit = await pool.query('UPDATE posts SET title=$1 updated_at=$2 where id= $3', [newDescription,currentTime,postId]);
     console.log(postTitleEdit)
     res.json({
       message: 'descripcion actualizada correctamente.',
