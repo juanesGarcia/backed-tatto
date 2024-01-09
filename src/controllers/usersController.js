@@ -11,7 +11,7 @@ const path = require('path');
 
 const getUsers =async(req, res) => {
     try {
-     const result = await pool.query('select (id,name,rol) from users');
+     const result = await pool.query('select (id,name,rol,lon,lat) from users');
       res.json(result.rows)
     } catch (error) {
         console.log(error.message)
@@ -537,6 +537,23 @@ const checkreactions = async (req,res) => {
 
 }
 
+const updatelocation = async (req,res)=>{
+  const {id,lon,lat,cityUser} =req.body
+
+  try {
+    const result= await pool.query('UPDATE users SET lon=$1,lat=$2,city=$3 WHERE id =$4',[lon,lat,cityUser,id])
+    res.json({
+      success:true
+  })
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });    
+  }
+
+
+}
+
 
 
 
@@ -565,6 +582,7 @@ module.exports ={
     reactions,
     checkreactions,
     unreaction,
-    getReaction
+    getReaction,
+    updatelocation
 
 }
