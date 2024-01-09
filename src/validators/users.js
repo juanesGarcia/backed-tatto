@@ -12,8 +12,8 @@ const password= check('password')
   );
 
   const name= check('name')
-  .isLength({ min: 3 ,max:30})
-  .withMessage('el nombre debe tener al menos 3 caracteres')
+  .isLength({ min: 3 ,max:22})
+  .withMessage('el nombre debe tener al menos 3 caracteres y maximo 22')
   .matches(/^[^\s]+$/, 'i')
   .withMessage('El nombre no debe contener espacios en blanco.');
 

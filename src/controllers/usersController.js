@@ -39,13 +39,13 @@ const getUser =async(req, res) => {
    
 }
 const register =async(req, res) => {
-    const {email,password,name,rol,lon,lat,phone} = req.body;
+    const {email,password,name,rol,phone} = req.body;
     console.log(req.body)
     console.log(rol)
     try {
         const id= v4()
         const hashedPassword = await hash(password,10)
-        await pool.query('insert into users(id,name,email,password,rol,lon,lat,phone) values ($1, $2,$3,$4,$5,$6,$7,$8) ',[ id,name,email,hashedPassword,rol,lon,lat,phone])
+        await pool.query('insert into users(id,name,email,password,rol,phone) values ($1, $2,$3,$4,$5,$6) ',[ id,name,email,hashedPassword,rol,phone])
         return res.status(201).json({
             success: true,
             message: " the registracion was succefull",
