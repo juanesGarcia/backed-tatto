@@ -3,6 +3,7 @@ const db = require("../constants/db");
 const { compare } = require("bcryptjs");
 
 
+
 const password= check('password')
   .isLength({ min: 6 ,max:15})
   .withMessage('La contraseña debe tener al menos 8 caracteres')

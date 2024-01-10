@@ -539,9 +539,10 @@ const checkreactions = async (req,res) => {
 
 const updatelocation = async (req,res)=>{
   const {id,lon,lat,cityUser} =req.body
+  const currentTimestamp = new Date();
 
   try {
-    const result= await pool.query('UPDATE users SET lon=$1,lat=$2,city=$3 WHERE id =$4',[lon,lat,cityUser,id])
+    const result= await pool.query('UPDATE users SET lon=$1,lat=$2,city=$3, updated_at=$4 WHERE id =$5',[lon,lat,cityUser,currentTimestamp,id])
     res.json({
       success:true
   })
