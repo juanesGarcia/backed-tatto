@@ -26,6 +26,7 @@ const {
     updatelocation,
     rating,
     getRating,
+    yetRating
     
 
 } =require("../controllers/usersController")
@@ -80,6 +81,7 @@ router.post('/updatelocation',updatelocation);
 router.get('/getreactions/:id',getReaction);
 router.post('/rating',rating);
 router.get('/getRating/:id',getRating);
+router.post('/yetrating',yetRating);
 
 
 

@@ -572,25 +572,37 @@ const rating = async(req,res)=>{
   }
 
 }
-
-
-const getRating = async (req, res) => {
+const getRating = async(req,res)=>{
   const {id} = req.params;
-  console.log('get reating',id)
-  
+
   try {
-    const result = await pool.query('SELECT AVG(rating) AS average_rating FROM ratings WHERE tatuador_user_id= $1 GROUP BY tatuador_user_id;',[id]);
-   res.json({
-       info: result.rows
-   })
-   console.log(result.rows)
-    }catch (error) { 
-       console.log(error.message)
-   }
+    const result= await pool.query('SELECT AVG(rating) AS average_rating FROM ratings WHERE tatuador_user_id = $1 GROUP BY tatuador_user_id;',[id])
+    res.json({
+      info: result.rows
+    })
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+    });    
+  }
+
 }
+const yetRating = async (req,res)=>{
+  const {rater_user, tatuador_user} =req.body
+  console.log(rater_user,tatuador_user)
 
-
-
+  try {
+    const result= await pool.query('SELECT EXISTS (SELECT 1 from ratings WHERE rater_user_id = $1 AND tatuador_user_id = $2) AS rating_yet;',[rater_user,tatuador_user])
+    res.json({
+      info:result.rows
+  })
+  console.log(result.rows)
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });    
+  }
+}
 
 
 
@@ -622,5 +634,7 @@ module.exports ={
     updatelocation,
     rating,
     getRating,
+    yetRating
+
 
 }
