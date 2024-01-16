@@ -8,7 +8,7 @@ const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
 const { uploadFiles,deleteFileByName} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
-const { Console } = require("console");
+
 
 const getUsers =async(req, res) => {
     try {
@@ -604,6 +604,33 @@ const yetRating = async (req,res)=>{
   }
 }
 
+const getUsersWithRating = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        u.id,
+        u.name,
+        u.rol,
+        u.lon,
+        u.lat,
+        u.city,
+        COALESCE(AVG(r.rating), 0) AS average_rating
+      FROM
+        users u
+      LEFT JOIN
+        ratings r ON u.id = r.tatuador_user_id
+      GROUP BY
+        u.id, u.name, u.rol, u.lon, u.lat, u.city
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
 
 
 
@@ -634,7 +661,8 @@ module.exports ={
     updatelocation,
     rating,
     getRating,
-    yetRating
+    yetRating,
+    getUsersWithRating
 
 
 }
