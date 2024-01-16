@@ -8,6 +8,7 @@ const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
 const { uploadFiles,deleteFileByName} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
+const { Console } = require("console");
 
 const getUsers =async(req, res) => {
     try {
@@ -551,9 +552,43 @@ const updatelocation = async (req,res)=>{
       error: error.message,
     });    
   }
+}
 
+
+const rating = async(req,res)=>{
+  const {rater_user, tatuador_user,rating} =req.body;
+  console.log('rating',rater_user,tatuador_user,rating)
+  console.log(req.body) 
+
+  try {
+    const result= await pool.query('insert into ratings ( rater_user_id, tatuador_user_id,rating) values ($1, $2,$3) ',[rater_user,tatuador_user,rating])
+    res.json({
+      message:'calificacion exitosa'
+  })
+  } catch (error) {
+    return res.status(500).json({
+      error: 'ya hicite el rating ',
+    });    
+  }
 
 }
+
+
+const getRating = async (req, res) => {
+  const {id} = req.params;
+  console.log('get reating',id)
+  
+  try {
+    const result = await pool.query('SELECT AVG(rating) AS average_rating FROM ratings WHERE tatuador_user_id= $1 GROUP BY tatuador_user_id;',[id]);
+   res.json({
+       info: result.rows
+   })
+   console.log(result.rows)
+    }catch (error) { 
+       console.log(error.message)
+   }
+}
+
 
 
 
@@ -584,6 +619,8 @@ module.exports ={
     checkreactions,
     unreaction,
     getReaction,
-    updatelocation
+    updatelocation,
+    rating,
+    getRating,
 
 }

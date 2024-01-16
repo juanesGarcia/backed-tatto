@@ -23,8 +23,9 @@ const {
     checkreactions,
     unreaction,
     getReaction,
-    updatelocation
-
+    updatelocation,
+    rating,
+    getRating,
     
 
 } =require("../controllers/usersController")
@@ -77,6 +78,8 @@ router.post('/checkreactions',checkreactions);
 router.post('/unreaction',unreaction);
 router.post('/updatelocation',updatelocation);
 router.get('/getreactions/:id',getReaction);
+router.post('/rating',rating);
+router.get('/getRating/:id',getRating);
 
 
 
