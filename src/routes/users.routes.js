@@ -27,7 +27,8 @@ const {
     rating,
     getRating,
     yetRating,
-    getUsersWithRating
+    getUsersWithRating,
+    uploadImagesProfile
     
 
 } =require("../controllers/usersController")
@@ -84,6 +85,7 @@ router.get('/getreactions/:id',getReaction);
 router.post('/rating',rating);
 router.get('/getRating/:id',getRating);
 router.post('/yetrating',yetRating);
+router.post('/uploadimg/:id',upload.array('photo', 1),uploadImagesProfile);
 
 
 

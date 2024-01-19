@@ -23,7 +23,7 @@ const getUser =async(req, res) => {
     const {id} = req.params;
     console.log(id)
     try {
-     const result = await pool.query('select (name,email,rol,phone,city) from users where id = $1',[id]);
+     const result = await pool.query('select (name,email,rol,phone,city,media_url) from users where id = $1',[id]);
      if(!result.rows.length){
         return res.status(404).json({
             message:"user not found "
@@ -386,7 +386,9 @@ const editarTitleImages = async (req, res) => {
       message: 'descripcion actualizada correctamente.',
     });
   } catch (error) {
-    
+    return res.status(500).json({
+      error:error.message
+  })
   }
 }
 
@@ -614,6 +616,7 @@ const getUsersWithRating = async (req, res) => {
         u.lon,
         u.lat,
         u.city,
+        u.media_url,
         COALESCE(AVG(r.rating), 0) AS average_rating
       FROM
         users u
@@ -628,6 +631,45 @@ const getUsersWithRating = async (req, res) => {
     console.log(error.message);
     res.status(500).json({
       error: error.message,
+    });
+  }
+};
+
+const uploadImagesProfile = async (req, res) => {
+  const { id } = req.params;
+  console.log(id)
+
+  try {
+    // Iterar sobre cada archivo y subirlo
+    const uploadResults = await Promise.all(
+      req.files.map(async (file) => {
+        const result = await uploadFiles(file);
+        return {
+          originalname: result.uniqueFilename,
+          url: result.url,
+          expires: result.expires,
+        };
+      })
+    );
+
+    // Actualizar la URL de la imagen en la tabla 'users'
+    const photoUrl = uploadResults[0].url; // Suponemos que solo se sube una imagen
+    const updateUserResult = await pool.query('UPDATE users SET media_url=$1 WHERE id=$2 RETURNING media_url', [
+      photoUrl,
+      id,
+    ]);
+    const updatedUserMediaUrl = updateUserResult.rows[0].media_url;
+
+    res.json({
+      message: 'Imagen de perfil actualizada correctamente.',
+      mediaUrl: updatedUserMediaUrl, // Devuelve la URL de la imagen actualizada
+    });
+
+    clearAndRecreateUploadsFolder();
+  } catch (error) {
+    console.error('Error al subir la foto de perfil:', error);
+    res.status(500).json({
+      error: error,
     });
   }
 };
@@ -662,7 +704,8 @@ module.exports ={
     rating,
     getRating,
     yetRating,
-    getUsersWithRating
+    getUsersWithRating,
+    uploadImagesProfile,
 
 
 }
