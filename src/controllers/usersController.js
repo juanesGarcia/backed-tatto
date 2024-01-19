@@ -578,7 +578,7 @@ const getRating = async(req,res)=>{
   const {id} = req.params;
 
   try {
-    const result= await pool.query('SELECT AVG(rating) AS average_rating FROM ratings WHERE tatuador_user_id = $1 GROUP BY tatuador_user_id;',[id])
+    const result= await pool.query('SELECT AVG(rating) AS average_rating , COUNT(rating) AS rating_count FROM ratings WHERE tatuador_user_id = $1 GROUP BY tatuador_user_id;',[id])
     res.json({
       info: result.rows
     })
