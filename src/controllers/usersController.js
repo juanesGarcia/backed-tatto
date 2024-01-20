@@ -448,7 +448,7 @@ const followed = async (req, res)=>{
   const {id} = req.params;
 
   try {
-    const result = await pool.query('SELECT u.name AS followed_name, u.id AS followed_id FROM follows f JOIN users u ON f.followed_user_id = u.id WHERE f.follower_user_id = $1',[id]);
+    const result = await pool.query('SELECT u.name AS followed_name, u.id AS followed_id,u.media_url AS media_url FROM follows f JOIN users u ON f.followed_user_id = u.id WHERE f.follower_user_id = $1',[id]);
    res.json({
        info: result.rows
    })
@@ -516,7 +516,7 @@ const getReaction = async (req, res) => {
   console.log('get reaccions',id)
   
   try {
-    const result = await pool.query('SELECT users.id , users.name FROM users JOIN reactions ON users.id = reactions.reactor_id WHERE reactions.post_id = $1',[id]);
+    const result = await pool.query('SELECT users.id , users.name, users.media_url AS media_url FROM users JOIN reactions ON users.id = reactions.reactor_id WHERE reactions.post_id = $1',[id]);
    res.json({
        info: result.rows
    })
