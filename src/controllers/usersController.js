@@ -68,6 +68,7 @@ const login= async (req,res)=>{
         name: user.name, 
         phone:user.phone,
         rol:user.rol,
+        media_url:user.mediaUrl
     }
     
     try {
