@@ -3,6 +3,7 @@ const serviceAccount = require("./credentials.json");
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const sharp = require('sharp');  // Agregado sharp
+const { parse } = require('url');
 
 const firebaseConfig = {
   credential: admin.credential.cert(serviceAccount),
@@ -75,7 +76,6 @@ const deleteFileByName = async (filename) => {
     throw error;
   }
 };
-
 const deleteFileByNamepro = async (filename) => {
   try {
     await bucket.file(filename).delete();
@@ -86,11 +86,17 @@ const deleteFileByNamepro = async (filename) => {
   }
 };
 
+
 const getFileNameFromUrl = (imageUrl) => {
-  const parsedUrl = parse(imageUrl);
-  const pathnameSegments = parsedUrl.pathname.split('/');
-  const fileName = pathnameSegments[pathnameSegments.length - 1];
-  return fileName;
+  try {
+    const parsedUrl = parse(imageUrl);
+    const pathSegments = parsedUrl.pathname.split('/');
+    const filename = pathSegments[pathSegments.length - 1];
+    return filename;
+  } catch (error) {
+    console.error('Error al obtener el nombre del archivo desde la URL:', error);
+    throw error;
+  }
 };
 
 module.exports = {
