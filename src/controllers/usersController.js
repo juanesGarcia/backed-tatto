@@ -5,7 +5,7 @@ const {hash} = require('bcryptjs');
 const { SECRET } = require("../constants");
 const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
-const { uploadFiles,deleteFileByName} =require("../firabase")
+const { uploadFiles,deleteFileByName,getFileNameFromUrl,deleteFileByNamepro} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
 
@@ -635,10 +635,8 @@ const getUsersWithRating = async (req, res) => {
     });
   }
 };
-
 const uploadImagesProfile = async (req, res) => {
   const { id } = req.params;
-  console.log(id)
 
   try {
     // Iterar sobre cada archivo y subirlo
@@ -653,35 +651,40 @@ const uploadImagesProfile = async (req, res) => {
       })
     );
 
-    const result = await pool.query('select media_url from users where id=$1', [
-      id,
-    ]);
-    console.log(result)
+    const newPhotoUrl = uploadResults[0].url;
 
+    // Obtener la URL de la imagen actual del usuario
+    const result = await pool.query('SELECT media_url FROM users WHERE id = $1', [id]);
+    const currentPhotoUrl = result.rows[0].media_url;
+
+    // Verificar si hay una imagen actual y eliminarla
+    if (currentPhotoUrl !== null) {
+      const currentFileName = getFileNameFromUrl(currentPhotoUrl);
+      await deleteFileByNamepro(currentFileName);
+    }
 
     // Actualizar la URL de la imagen en la tabla 'users'
-    const photoUrl = uploadResults[0].url; // Suponemos que solo se sube una imagen
-    const updateUserResult = await pool.query('UPDATE users SET media_url=$1 WHERE id=$2 RETURNING media_url', [
-      photoUrl,
+    const updateUserResult = await pool.query('UPDATE users SET media_url = $1 WHERE id = $2 RETURNING media_url', [
+      newPhotoUrl,
       id,
     ]);
+
     const updatedUserMediaUrl = updateUserResult.rows[0].media_url;
-    console.log(updatedUserMediaUrl)
 
     res.json({
       message: 'Imagen de perfil actualizada correctamente.',
-      mediaUrl: updatedUserMediaUrl, // Devuelve la URL de la imagen actualizada
-      result:result,
+      mediaUrl: updatedUserMediaUrl,
     });
 
     clearAndRecreateUploadsFolder();
   } catch (error) {
     console.error('Error al subir la foto de perfil:', error);
     res.status(500).json({
-      error: error,
+      error: 'Error al subir la foto de perfil',
     });
   }
 };
+
 
 
 
