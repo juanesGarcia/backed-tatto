@@ -23,7 +23,7 @@ const uploadFiles = async (file) => {
 
     // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
-      .resize({ width: 800, height: 800, fit: 'inside' })  // Ajusta los tamaños según tus necesidades
+      .resize({ width: 800, height: 1000, fit: 'contain' })  // Ajusta los tamaños según tus necesidades
       .toBuffer();
 
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
