@@ -653,6 +653,12 @@ const uploadImagesProfile = async (req, res) => {
       })
     );
 
+    const result = await pool.query('select media_url from users where id=$1', [
+      id,
+    ]);
+    console.log(result)
+
+
     // Actualizar la URL de la imagen en la tabla 'users'
     const photoUrl = uploadResults[0].url; // Suponemos que solo se sube una imagen
     const updateUserResult = await pool.query('UPDATE users SET media_url=$1 WHERE id=$2 RETURNING media_url', [
@@ -660,10 +666,12 @@ const uploadImagesProfile = async (req, res) => {
       id,
     ]);
     const updatedUserMediaUrl = updateUserResult.rows[0].media_url;
+    console.log(updatedUserMediaUrl)
 
     res.json({
       message: 'Imagen de perfil actualizada correctamente.',
       mediaUrl: updatedUserMediaUrl, // Devuelve la URL de la imagen actualizada
+      result:result,
     });
 
     clearAndRecreateUploadsFolder();
