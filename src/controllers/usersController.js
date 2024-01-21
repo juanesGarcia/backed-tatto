@@ -675,7 +675,7 @@ const uploadImagesProfile = async (req, res) => {
       message: 'Imagen de perfil actualizada correctamente.',
       mediaUrl: updatedUserMediaUrl,
     });
-
+    
     clearAndRecreateUploadsFolder();
   } catch (error) {
     console.error('Error al subir la foto de perfil:', error);

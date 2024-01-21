@@ -85,9 +85,18 @@ const deleteFileByNamepro = async (filename) => {
     throw error;
   }
 };
+
+const getFileNameFromUrl = (imageUrl) => {
+  const parsedUrl = parse(imageUrl);
+  const pathnameSegments = parsedUrl.pathname.split('/');
+  const fileName = pathnameSegments[pathnameSegments.length - 1];
+  return fileName;
+};
+
 module.exports = {
   uploadFiles,
   deleteFileByName,
-  deleteFileByNamepro
+  deleteFileByNamepro,
+  getFileNameFromUrl
 };
 
