@@ -3,7 +3,6 @@ const serviceAccount = require("./credentials.json");
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const sharp = require('sharp');  // Agregado sharp
-const { parse } = require('url');
 
 const firebaseConfig = {
   credential: admin.credential.cert(serviceAccount),
@@ -64,19 +63,19 @@ const uploadFiles = async (file) => {
 
 const deleteFileByName = async (filename) => {
   try {
-    await storage.bucket(bucketName).file(filename).delete();
+    // Crear una referencia al archivo en Firebase Storage
+    const fileRef = bucket.file(filename);
+
+    // Eliminar el archivo
+    await fileRef.delete();
+
     console.log(`Archivo eliminado con éxito: ${filename}`);
   } catch (error) {
-    console.error('Error al eliminar el archivo:', error);
+    console.error(`Error al eliminar el archivo ${filename}:`, error);
     throw error;
   }
 };
-const getFileNameFromUrl = (imageUrl) => {
-  const parsedUrl = parse(imageUrl);
-  const pathnameSegments = parsedUrl.pathname.split('/');
-  const fileName = pathnameSegments[pathnameSegments.length - 1];
-  return fileName;
-};
+
 const deleteFileByNamepro = async (filename) => {
   try {
     await bucket.file(filename).delete();
@@ -86,15 +85,9 @@ const deleteFileByNamepro = async (filename) => {
     throw error;
   }
 };
-
-
 module.exports = {
   uploadFiles,
   deleteFileByName,
-  getFileNameFromUrl,
   deleteFileByNamepro
-
 };
-
-
 
