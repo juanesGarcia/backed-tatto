@@ -42,7 +42,7 @@ const uploadFiles = async (file) => {
       .resize({
         width: Math.round(resizedWidth),
         height: Math.round(resizedHeight),
-        fit: 'cover',
+        fit: 'contain',
       })
       .toBuffer();
 
