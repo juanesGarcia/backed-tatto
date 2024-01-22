@@ -21,29 +21,9 @@ const uploadFiles = async (file) => {
     // Crear una referencia al archivo en Firebase Storage con el nombre único
     const storageRef = bucket.file(uniqueFilename);
 
-    // Obtener la información de la imagen original para calcular la relación de aspecto
-    const imageInfo = await sharp(file.path).metadata();
-
-    // Calcular las nuevas dimensiones manteniendo la relación de aspecto original
-    const targetWidth = 800;  // Ancho deseado
-    const targetHeight = 800; // Altura deseada
-    const originalAspectRatio = imageInfo.width / imageInfo.height;
-    let resizedWidth = targetWidth;
-    let resizedHeight = targetWidth / originalAspectRatio;
-
-    // Verificar si la altura calculada es suficiente para cubrir completamente el área
-    if (resizedHeight < targetHeight) {
-      resizedHeight = targetHeight;
-      resizedWidth = targetHeight * originalAspectRatio;
-    }
-
-    // Redimensionar la imagen usando sharp con las nuevas dimensiones
+    // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
-      .resize({
-        width: Math.round(resizedWidth),
-        height: Math.round(resizedHeight),
-        fit: 'contain',
-      })
+      .resize({ width: 800, height: null, fit: 'contain' })  // Ajusta los tamaños según tus necesidades
       .toBuffer();
 
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
