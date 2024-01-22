@@ -47,9 +47,19 @@ const loginCheck = check('email').custom(async(value, {req})=>{
   req.user = user.rows[0]
 })
 
+const nameExist = check('name').custom(async(value)=>{
+  const {rows} = await db.query('select * from users where users = $1',[
+      value,
+  ])
+
+if(rows.length){
+  throw new Error("name Already Exist")
+}
+})
+
 module.exports={
   registerValidator: [password,email,emailExist,name],
-  loginValidation:[loginCheck],
+  loginValidation:[loginCheck,nameExist],
   updateValidator:[password,email,name]
 }
 
