@@ -58,8 +58,8 @@ if(rows.length){
 })
 
 module.exports={
-  registerValidator: [password,email,emailExist,name],
-  loginValidation:[loginCheck,nameExist],
+  registerValidator: [password,email,emailExist,name,nameExist],
+  loginValidation:[loginCheck],
   updateValidator:[password,email,name]
 }
 
