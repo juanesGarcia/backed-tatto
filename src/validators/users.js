@@ -48,7 +48,7 @@ const loginCheck = check('email').custom(async(value, {req})=>{
 })
 
 const nameExist = check('name').custom(async(value)=>{
-  const {rows} = await db.query('select * from users where users = $1',[
+  const {rows} = await db.query('select * from users where name = $1',[
       value,
   ])
 
