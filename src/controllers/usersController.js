@@ -618,7 +618,8 @@ const getUsersWithRating = async (req, res) => {
         u.lat,
         u.city,
         u.media_url,
-        COALESCE(AVG(r.rating), 0) AS average_rating
+        COALESCE(AVG(r.rating), 0) AS average_rating,
+        COUNT(r.id) AS rating_count
       FROM
         users u
       LEFT JOIN
