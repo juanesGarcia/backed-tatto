@@ -28,7 +28,8 @@ const uploadFiles = async (file) => {
     .resize({
       width: 800, // Ancho deseado
       height: Math.round(800 / aspectRatio), // Calcula la altura según la relación de aspecto
-      fit: 'cover' // Puedes ajustar el ajuste según tus necesidades
+      fit: 'cover', // Puedes ajustar el ajuste según tus necesidades
+      withoutEnlargement: true 
     })
       .toBuffer();
 
