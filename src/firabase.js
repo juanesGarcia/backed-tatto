@@ -20,10 +20,16 @@ const uploadFiles = async (file) => {
 
     // Crear una referencia al archivo en Firebase Storage con el nombre único
     const storageRef = bucket.file(uniqueFilename);
+    
+    const aspectRatio = 4 / 3; 
 
     // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
-      .resize({ width: 800, height: 800, fit: 'cover' })  // Ajusta los tamaños según tus necesidades
+    .resize({
+      width: 800, // Ancho deseado
+      height: Math.round(800 / aspectRatio), // Calcula la altura según la relación de aspecto
+      fit: 'cover' // Puedes ajustar el ajuste según tus necesidades
+    })
       .toBuffer();
 
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
