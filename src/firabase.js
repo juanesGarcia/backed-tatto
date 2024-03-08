@@ -25,13 +25,6 @@ const uploadFiles = async (file) => {
 
     // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
-    .rotate() // Corrige la orientación basada en los metadatos EXIF
-    .resize({
-      width: 800, // Ancho deseado
-      height: Math.round(800 / aspectRatio), // Calcula la altura según la relación de aspecto
-      fit: 'cover', // Puedes ajustar el ajuste según tus necesidades
-      withoutEnlargement: true // Evita agrandar imágenes que son más pequeñas que las dimensiones especificadas
-    })
     .toBuffer();
 
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
