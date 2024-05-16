@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(passport.initialize())
 app.use(express.json());
 app.use(cors({
-    origin: 'http://tattopro.com',//
+    origin: true,
     credentials: true
   }));
   /*const corsOptions = {
