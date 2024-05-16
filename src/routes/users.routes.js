@@ -28,7 +28,8 @@ const {
     getRating,
     yetRating,
     getUsersWithRating,
-    uploadImagesProfile
+    uploadImagesProfile,
+    getUserInfo,
     
 
 } =require("../controllers/usersController")
@@ -68,6 +69,7 @@ router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUser
 router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
 router.get('/user/:id',getUser);
+router.get('/userInfo/:id',getUserInfo);
 router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);

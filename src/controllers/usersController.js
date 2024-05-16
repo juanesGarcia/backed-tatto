@@ -23,17 +23,38 @@ const getUser =async(req, res) => {
     const {id} = req.params;
     console.log(id)
     try {
-     const result = await pool.query('select (name) from users where id = $1',[id]);
+     const result = await pool.query('select (name,email,rol,phone,city,media_url) from users where id = $1',[id]);
      if(!result.rows.length){
         return res.status(404).json({
             message:"user not found "
         })
     }
-    res.json(result.rows)
+    res.json({
+        success:true,
+        message:"user was found",
+        info: result.rows,
+    })
      }catch (error) { 
         console.log(error.message)
     }
    
+}
+const getUserInfo =async(req, res) => {
+  const {id} = req.params;
+  console.log(id)
+  try {
+   const result = await pool.query('select (name) from users where id = $1',[id]);
+   if(!result.rows.length){
+      return res.status(404).json({
+          message:"user not found "
+      })
+  }
+  res.json(
+    result.rows)
+   }catch (error) { 
+      console.log(error.message)
+  }
+ 
 }
 const register =async(req, res) => {
     const {email,password,name,rol,phone} = req.body;
@@ -715,6 +736,7 @@ module.exports ={
     yetRating,
     getUsersWithRating,
     uploadImagesProfile,
+    getUserInfo,
 
 
 }
