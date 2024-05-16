@@ -23,17 +23,13 @@ const getUser =async(req, res) => {
     const {id} = req.params;
     console.log(id)
     try {
-     const result = await pool.query('select (name,email,rol,phone,city,media_url) from users where id = $1',[id]);
+     const result = await pool.query('select (name) from users where id = $1',[id]);
      if(!result.rows.length){
         return res.status(404).json({
             message:"user not found "
         })
     }
-    res.json({
-        success:true,
-        message:"user was found",
-        info: result.rows,
-    })
+    res.json(result.rows)
      }catch (error) { 
         console.log(error.message)
     }
@@ -117,7 +113,7 @@ const logout =async(req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { email, password, name } = req.body;
+    const { password, name } = req.body;
     const userId = req.user.id; // ID del usuario autenticado
     
     console.log(id);
@@ -127,11 +123,11 @@ const updateUser = async (req, res) => {
       if (userId !== id) {
         return res.status(401).json({ message: 'No tienes permiso para editar este perfil.' });
       }
+      console.log(password)
       const hashedPassword = await hash(password,10)
   
-      await pool.query('UPDATE users SET name = $1, email = $2, password = $3  WHERE id = $4', [
+      await pool.query('UPDATE users SET name = $1, password = $2 WHERE id = $3', [
         name,
-        email,
         hashedPassword,
         id
       ]);

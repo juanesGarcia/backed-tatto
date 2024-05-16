@@ -26,7 +26,7 @@ const uploadFiles = async (file) => {
     // Redimensionar la imagen usando sharp antes de subirla
     const resizedBuffer = await sharp(file.path)
     .rotate() // Rotar la imagen según los metadatos EXIF
-      .toBuffer();
+    .toBuffer();
     // Crear un flujo de escritura para cargar el archivo redimensionado en Storage
     const writeStream = storageRef.createWriteStream({
       metadata: {
