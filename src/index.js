@@ -15,15 +15,15 @@ app.use(morgan('dev'))
 app.use(cookieParser());
 app.use(passport.initialize())
 app.use(express.json());
-/*app.use(cors({
+app.use(cors({
     origin: true,
     credentials: true
-  }));*/
-  const corsOptions = {
+  }));
+ /* const corsOptions = {
     origin: 'https://tattopro.com',
     credentials: true,
   };
-  app.use(cors(corsOptions));
+  app.use(cors(corsOptions));*/
 
 //import routes 
 const authRoutes=require('./routes/users.routes');
