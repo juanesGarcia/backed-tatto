@@ -141,6 +141,9 @@ const updateUser = async (req, res) => {
     console.log(name);
   
     try {
+      if (userId !== id) {
+        return res.status(401).json({ message: 'No tienes permiso para editar este perfil.' });
+      }
       console.log(password)
       const hashedPassword = await hash(password,10)
   
