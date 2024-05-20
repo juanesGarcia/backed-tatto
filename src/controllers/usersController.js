@@ -137,7 +137,7 @@ const updateUser = async (req, res) => {
     const { password, name } = req.body;
     const userId = req.user.id; // ID del usuario autenticado
     
-    console.log(id);
+    console.log(userId);
     console.log(name);
   
     try {
