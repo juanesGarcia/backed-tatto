@@ -89,7 +89,7 @@ const login= async (req,res)=>{
     }
     
     try {
-        const token = sign(payload,SECRET)
+        const token = sign(payload,SECRET,{expiresIn:'2m'})
         return res.status(200).cookie('token',token,{httpOnly:true}).json({
             success: true,
             message: "Logged in succefully ",
