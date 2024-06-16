@@ -61,7 +61,7 @@ router.get('/',async(req, res) => {
 
 router.get('/user',getUsers);
 router.get('/userwithrating',getUsersWithRating);
-router.get('/protected',userAuth,protected);
+router.get('/protect',userAuth,protected);
 router.get('/logout',logout);
 router.post('/register',registerValidator,validationMiddleware,register);
 router.post('/login',loginValidation,validationMiddleware,login);
