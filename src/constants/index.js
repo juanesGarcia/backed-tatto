@@ -1,16 +1,41 @@
-const { config} = require("dotenv");
-config()
+const express = require('express');
+const morgan = require('morgan');
+const app = express();
+const cookieParser = require('cookie-parser');
+
+const cors = require('cors')
+
+PORT=3000;
+app.use(morgan('dev'))
+//initialize middlewares
+app.use(cookieParser());
+
+app.use(express.json());
+app.use(cors({
+    origin: true,
+    credentials: true
+  }));
+ /* const corsOptions = {
+    origin: 'https://tattopro.com',
+    credentials: true,
+  };
+  app.use(cors(corsOptions));*/
+
+//import routes 
+const authRoutes=require('./network');
 
 
+app.use(authRoutes);
 
-
-module.exports={
-    SECRET: process.env.SECRET,
-    CLIENT_URL: process.env.CLIENT_URL,
-    AWS_PUBLIC_KEY :process.env.AWS_PUBLIC_KEY,
-    AWS_SECRET_KEY : process.env.AWS_SECRET_KEY,
-    AWS_BUCKET_NAME : process.env.AWS_BUCKET_NAME,
-    AWS_BUCKET_REGION:  process.env.AWS_BUCKET_REGION,
+const appStart =()=>{
+    try {
+        app.listen(PORT,()=>{
+            console.log(`listener micro2: ${PORT}`);
+        })
+        
+    } catch (error) {
+        console.log(`Error:${error.message}`);
+    }
 }
 
-
+appStart()

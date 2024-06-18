@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
-const { SECRET } = require('../constants');
+const { SECRET } = require('../constants/env');
 const db = require('../constants/db');
 
 const options = {

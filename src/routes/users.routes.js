@@ -30,13 +30,15 @@ const {
     getUsersWithRating,
     uploadImagesProfile,
     getUserInfo,
-    
+    getusersMicroservices,
+    main
 
 } =require("../controllers/usersController")
 const pool = require("../constants/db");
 const router = Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+
 
 
 
@@ -49,17 +51,9 @@ const { validationMiddleware } = require("../middlewares/validation-middleware")
 const {userAuth} = require("../middlewares/users-middleware");
 
 
-router.get('/',async(req, res) => {
-    try {
-     const result = await pool.query('  select  * from users ');
-      res.json(result.rows)
-    } catch (error) {
-        console.log(error.message)
-    }
-   
-} );
-
-router.get('/user',getUsers);
+router.get('/',main);
+router.get('/user',getusersMicroservices);
+router.get('/userwithout',getUsers);
 router.get('/userwithrating',getUsersWithRating);
 router.get('/protect',userAuth,protected);
 router.get('/logout',logout);

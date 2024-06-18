@@ -4,7 +4,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors')
-const {CLIENT_URL}= require('./constants')
+const {CLIENT_URL}= require('./constants/env')
 
 
 
@@ -34,7 +34,7 @@ app.use(authRoutes);
 const appStart =()=>{
     try {
         app.listen(PORT,()=>{
-            console.log(`listener: ${PORT}`);
+            console.log(`listener micro1: ${PORT}`);
         })
         
     } catch (error) {

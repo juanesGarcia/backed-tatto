@@ -2,13 +2,24 @@
 const { sign } = require("jsonwebtoken");
 const pool = require("../constants/db");
 const {hash} = require('bcryptjs');
-const { SECRET } = require("../constants");
+const { SECRET } = require("../constants/env");
 const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
 const { uploadFiles,deleteFileByName,getFileNameFromUrl,deleteFileByNamepro} =require("../firabase")
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
+const main=async(req, res) => {
+  try {
+    const response = await axios.get('http://localhost:3000/');
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+ 
+}
 
 const getUsers =async(req, res) => {
     try {
@@ -19,6 +30,17 @@ const getUsers =async(req, res) => {
     }
    
 }
+const getusersMicroservices= async (req,res)=>{
+      try {
+        const response = await axios.get('http://localhost:3000/user');
+        res.json(response.data);
+        console.log("microserver",response.data)
+      } catch (error) {
+        console.error(error);
+      }
+}
+
+
 const getUser =async(req, res) => {
     const {id} = req.params;
     console.log(id)
@@ -737,6 +759,8 @@ module.exports ={
     getUsersWithRating,
     uploadImagesProfile,
     getUserInfo,
+    getusersMicroservices,
+    main
 
 
 }
