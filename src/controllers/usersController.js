@@ -52,9 +52,11 @@ const getUsersWithRatingMicro= async (req,res)=>{
 
 const updateUserMicro = async (req, res) => {
   const { id } = req.params;
-  const { password, name } = req.body;
+  const { password, name} = req.body;
+  
 
   try {
+
     const response = await axios.put(
       `http://localhost:3000/user/${id}`,
       { password, name } // Enviar los datos correctos al microservicio en el cuerpo de la solicitud
