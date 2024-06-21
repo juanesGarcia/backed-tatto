@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node src/index-main.js",
+    "dev": "nodemon src/index-main.js",
+    "dev:microservicio-users": "nodemon src/microserver-users/index-users.js"
   },
   "keywords": [],
   "author": "",

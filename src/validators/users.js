@@ -1,5 +1,5 @@
 const { check } = require("express-validator");
-const db = require("../constants/db");
+const db = require("../databases/db");
 const { compare } = require("bcryptjs");
 
 
@@ -12,6 +12,7 @@ const password= check('password')
   'La contraseña debe contener al menos una letra minúscula y un número'
   );
 
+  
   const name= check('name')
   .isLength({ min: 3 ,max:20})
   .withMessage('el nombre debe tener al menos 3 caracteres y maximo 20')

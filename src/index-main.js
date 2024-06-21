@@ -4,7 +4,6 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors')
-const {CLIENT_URL}= require('./constants/env')
 
 
 
@@ -26,7 +25,7 @@ app.use(cors({
   app.use(cors(corsOptions));*/
 
 //import routes 
-const authRoutes=require('./routes/users.routes');
+const authRoutes=require('./routes/main.routes');
 
 
 app.use(authRoutes);

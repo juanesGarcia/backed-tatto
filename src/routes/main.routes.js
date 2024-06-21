@@ -31,10 +31,11 @@ const {
     uploadImagesProfile,
     getUserInfo,
     getusersMicroservices,
-    main
+    main,
+    getUsersWithRatingMicro,
+    updateUserMicro,
 
 } =require("../controllers/usersController")
-const pool = require("../constants/db");
 const router = Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -52,18 +53,18 @@ const {userAuth} = require("../middlewares/users-middleware");
 
 
 router.get('/',main);
-router.get('/user',getusersMicroservices);
-router.get('/userwithout',getUsers);
-router.get('/userwithrating',getUsersWithRating);
+router.get('/users',getusersMicroservices);
+//router.get('/userwithout',getUsers);
+router.get('/userwithrating',getUsersWithRatingMicro);
 router.get('/protect',userAuth,protected);
 router.get('/logout',logout);
 router.post('/register',registerValidator,validationMiddleware,register);
 router.post('/login',loginValidation,validationMiddleware,login);
-router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUser);
-router.delete('/user/:id',userAuth,deleteUser);
+router.put('/user/:id',userAuth, updateValidator,validationMiddleware,updateUserMicro);
+//router.delete('/user/:id',userAuth,deleteUser);
 router.post('/verify-token',verifyToken );
-router.get('/user/:id',getUser);
-router.get('/userInfo/:id',getUserInfo);
+//router.get('/user/:id',getUser);
+//router.get('/userInfo/:id',getUserInfo);
 router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)
 router.delete('/deleteimages/:postId', deleteImages);

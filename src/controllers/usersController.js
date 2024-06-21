@@ -1,8 +1,8 @@
 
 const { sign } = require("jsonwebtoken");
-const pool = require("../constants/db");
+const pool = require("../databases/db");
 const {hash} = require('bcryptjs');
-const { SECRET } = require("../constants/env");
+const { SECRET } = require("../databases/env");
 const{v4}=require("uuid");
 const { checkTokenValidity } = require("../middlewares/checkTokenValidity");
 const { uploadFiles,deleteFileByName,getFileNameFromUrl,deleteFileByNamepro} =require("../firabase")
@@ -32,12 +32,40 @@ const getUsers =async(req, res) => {
 }
 const getusersMicroservices= async (req,res)=>{
       try {
-        const response = await axios.get('http://localhost:3000/user');
+        const response = await axios.get('http://localhost:3000/users');
         res.json(response.data);
         console.log("microserver",response.data)
       } catch (error) {
         console.error(error);
       }
+}
+
+const getUsersWithRatingMicro= async (req,res)=>{
+  try {
+    const response = await axios.get('http://localhost:3000/userwithrating');
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const updateUserMicro = async (req, res) => {
+  const { id } = req.params;
+  const { password, name } = req.body;
+
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/user/${id}`,
+      { password, name } // Enviar los datos correctos al microservicio en el cuerpo de la solicitud
+    );
+    
+    res.json(response.data);
+    console.log("Respuesta del microservicio:", response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
 }
 
 
@@ -155,39 +183,26 @@ const logout =async(req, res) => {
 
 
 const updateUser = async (req, res) => {
-    const { id } = req.params;
-    const { password, name } = req.body;
-    const userId = req.user.id; // ID del usuario autenticado
-    
-    console.log(userId);
-    console.log(name);
-  
-    try {
-      if (userId !== id) {
-        return res.status(401).json({ message: 'No tienes permiso para editar este perfil.' });
-      }
-      console.log(password)
-      const hashedPassword = await hash(password,10)
-  
-      await pool.query('UPDATE users SET name = $1, password = $2 WHERE id = $3', [
-        name,
-        hashedPassword,
-        id
-      ]);
+  const { id } = req.params;
+  const { password, name } = req.body;
+  console.log(name)
 
+  try {
+    const hashedPassword = await hash(password, 10);
 
-  
-      res.json({
-        success: true,
-        message: 'Perfil actualizado correctamente.'
-      });
-    } catch (error) {
-      console.log(error.message);
-      return res.status(500).json({
-        error: error.message
-      });
-    }
-  };
+    await pool.query('UPDATE users SET name = $1, password = $2 WHERE id = $3', [
+      name,
+      hashedPassword,
+      id
+    ]);
+
+    res.json({ success: true, message: 'Perfil actualizado correctamente.' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
   
   const deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -760,7 +775,9 @@ module.exports ={
     uploadImagesProfile,
     getUserInfo,
     getusersMicroservices,
-    main
+    main,
+    getUsersWithRatingMicro,
+    updateUserMicro
 
 
 }
