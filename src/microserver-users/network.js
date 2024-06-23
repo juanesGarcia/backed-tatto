@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const pool = require("../databases/db");
+
 const router = Router();
 const {
     getUsers,
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
 router.get('/userwithrating',getUsersWithRating);
 router.put('/user/:id',updateUser);
-router.delete('/user/:id',userAuth,deleteUser);
+router.delete('/user/:id',deleteUser);
 router.get('/user/:id',getUser);
 router.get('/userInfo/:id',getUserInfo);
 
