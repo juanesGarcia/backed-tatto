@@ -216,18 +216,26 @@ const register =async(req, res) => {
    
 }
 
+const registerMicro = async (req, res) => {
+  const {email,password,name,rol,phone} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3005/register',
+      {email,password,name,rol,phone}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const login= async (req,res)=>{
-    let user = req.user
-    console.log(user)
-    payload={
-        id: user.id,
-        email: user.email,
-        name: user.name, 
-        phone:user.phone,
-        rol:user.rol,
-        media_url:user.media_url,
-    }
-    
+  let payload = req.body;
+  console.log('prueba ', payload)
     try {
         const token = sign(payload,SECRET,{expiresIn:'2m'})
         return res.status(200).cookie('token',token,{httpOnly:true}).json({
@@ -243,6 +251,36 @@ const login= async (req,res)=>{
             error:error.message
         })
     }
+}
+const loginMicro = async (req, res) => {
+  let user = req.user
+  payload={
+      id: user.id,
+      email: user.email,
+      name: user.name, 
+      phone:user.phone,
+      rol:user.rol,
+      media_url:user.media_url,
+  }
+  console.log(payload)
+  try {
+    const response = await axios.post(
+      'http://localhost:3005/login',
+      payload, // Enviar los datos correctos al microservicio en el cuerpo de la solicitud
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
 }
 
 const protected =async(req, res) => {
@@ -271,6 +309,15 @@ const logout =async(req, res) => {
     }
 }
 
+const logoutMicro= async (req,res)=>{
+  try {
+    const response = await axios.get(`http://localhost:3005/logout`);
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
   
@@ -821,6 +868,9 @@ module.exports ={
     getUserMicro,
     deleteUserMicro,
     getUserInfoMicro,
+    logoutMicro,
+    loginMicro,
+    registerMicro
 
 
 }

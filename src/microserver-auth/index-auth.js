@@ -17,7 +17,8 @@ app.use(cors({
 }));
 
 // Define your routes here
-// const authRoutes = require('./network');
+const authRoutes = require('./network');
+app.use(authRoutes)
 
 const appStart = () => {
   try {

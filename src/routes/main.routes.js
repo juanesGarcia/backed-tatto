@@ -36,7 +36,10 @@ const {
     updateUserMicro,
     getUserMicro,
     deleteUserMicro,
-    getUserInfoMicro
+    getUserInfoMicro,
+    logoutMicro,
+    loginMicro,
+    registerMicro
 
 } =require("../controllers/usersController")
 const router = Router();
@@ -64,9 +67,9 @@ router.delete('/user/:id',userAuth,deleteUserMicro);
 router.get('/user/:id',getUserMicro);
 router.get('/userInfo/:id',getUserInfoMicro);
 router.get('/protect',userAuth,protected);
-router.get('/logout',logout);
-router.post('/register',registerValidator,validationMiddleware,register);
-router.post('/login',loginValidation,validationMiddleware,login);
+router.get('/logout',logoutMicro);
+router.post('/register',registerValidator,validationMiddleware,registerMicro);
+router.post('/login',loginValidation,validationMiddleware,loginMicro);
 router.post('/verify-token',verifyToken );
 router.post('/upload/:id',upload.array('photo', 5),uploadImages);
 router.get('/getimages/:id',getImages)

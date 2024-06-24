@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index-main.js",
     "dev": "nodemon src/index-main.js",
-    "dev:microservicio-users": "nodemon src/microserver-auth/index-auth.js"
+    "dev:microservicio-users": "nodemon src/microserver-users/index-user.js",
+    "dev:microservicio-auth": "nodemon src/microserver-auth/index-auth.js"
   },
   "keywords": [],
   "author": "",
