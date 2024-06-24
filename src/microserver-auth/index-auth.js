@@ -2,39 +2,31 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
-const cors = require('cors')
+const PORT = 3005;
 
-PORT=3005;
-app.use(morgan('dev'))
-//initialize middlewares
+app.use(morgan('dev'));
 app.use(cookieParser());
-
 app.use(express.json());
+
+// Configure CORS middleware
 app.use(cors({
-    origin: true,
-    credentials: true
-  }));
- /* const corsOptions = {
-    origin: 'https://tattopro.com',
-    credentials: true,
-  };
-  app.use(cors(corsOptions));*/
+  origin: true, // Update with your specific origin
+  credentials: true
+}));
 
-//import routes 
-const authRoutes=require('./network');
+// Define your routes here
+// const authRoutes = require('./network');
 
+const appStart = () => {
+  try {
+    app.listen(PORT, () => {
+      console.log(`Listener micro-auth: ${PORT}`);
+    });
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+  }
+};
 
-
-const appStart =()=>{
-    try {
-        app.listen(PORT,()=>{
-            console.log(`listener micro-auth: ${PORT}`);
-        })
-        
-    } catch (error) {
-        console.log(`Error:${error.message}`);
-    }
-}
-
-appStart()
+appStart();
