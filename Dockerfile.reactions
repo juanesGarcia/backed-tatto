@@ -10,7 +10,7 @@ COPY . .
 RUN npm install
 
 # Exponer el puerto en el que se ejecuta el microservicio
-EXPOSE 3001
+EXPOSE 3003
 
 # Comando para iniciar la aplicación del microservicio
-CMD ["npm", "run", "dev:microservicio-post"]
+CMD ["npm", "run", "dev:microservicio-reactions"]

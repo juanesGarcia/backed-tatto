@@ -553,6 +553,23 @@ const follow = async (req, res) =>{
 
 }
 
+const followMicro = async (req, res) => {
+  const {follower_id,followed_id} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3002/followUser',
+    {follower_id,followed_id}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const unfollow = async (req, res) => {
   const { follower_id, followed_id } = req.body;
 
@@ -570,6 +587,23 @@ const unfollow = async (req, res) => {
   }
 };
 
+const unfollowMicro = async (req, res) => {
+  const {follower_id,followed_id} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3002/unFollowUser',
+    {follower_id,followed_id}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const follower = async (req, res) =>{
   const {id} = req.params;
 
@@ -585,6 +619,19 @@ const follower = async (req, res) =>{
 
 }
 
+const followerMicro= async (req,res)=>{
+  const {id} = req.params;
+  try {
+    const response = await axios.get(`http://localhost:3002/follower/${id}`);
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
 const followed = async (req, res)=>{
   const {id} = req.params;
 
@@ -598,6 +645,18 @@ const followed = async (req, res)=>{
    }
 
 }
+
+const followedMicro= async (req,res)=>{
+  const {id} = req.params;
+  try {
+    const response = await axios.get(`http://localhost:3002/followed/${id}`);
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 const checkFollowingStatus = async (req,res) => {
   console.log(req.body)
@@ -614,6 +673,25 @@ const checkFollowingStatus = async (req,res) => {
 
 };
 
+
+const checkFollowingMicro = async (req, res) => {
+  const {follower_id,followed_id} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3002/checkfollowing',
+    {follower_id,followed_id}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
+
 const reactions = async (req,res) => {
   const {reactor_id, reacted_to_user_id,  post_id, reaction_type} = req.body
 
@@ -629,6 +707,24 @@ const reactions = async (req,res) => {
   }
 
 }
+
+const reactionsMicro = async (req, res) => {
+  const {reactor_id, reacted_to_user_id,  post_id, reaction_type} = req.body
+  try {
+    const response = await axios.post(
+      'http://localhost:3003/reaction',
+    {reactor_id, reacted_to_user_id,  post_id, reaction_type}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 
 const unreaction = async (req, res) => {
   const { reactor_id, post_id} = req.body;
@@ -652,6 +748,23 @@ const unreaction = async (req, res) => {
   }
 };
 
+const unReactionsMicro = async (req, res) => {
+  const { reactor_id, post_id} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3003/unreaction',
+      { reactor_id, post_id}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const getReaction = async (req, res) => {
   const {id} = req.params;
   console.log('get reaccions',id)
@@ -666,6 +779,16 @@ const getReaction = async (req, res) => {
        console.log(error.message)
    }
 }
+const getReactionMicro= async (req,res)=>{
+  const {id} = req.params;
+  try {
+    const response = await axios.get(`http://localhost:3003/getreactions/${id}`);
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
 const checkreactions = async (req,res) => {
@@ -678,6 +801,23 @@ const checkreactions = async (req,res) => {
   })
   } catch (error) {
     console.log(error)
+  }
+
+}
+
+const checkreactionsMicro = async (req, res) => {
+  const { reactor_id, post_id} = req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3003/checkreactions',
+      { reactor_id, post_id}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 
 }
@@ -716,6 +856,23 @@ const rating = async(req,res)=>{
   }
 
 }
+const ratingMicro = async (req, res) => {
+  const {rater_user, tatuador_user,rating} =req.body;
+  try {
+    const response = await axios.post(
+      'http://localhost:3004/rating',
+      {rater_user, tatuador_user,rating}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const getRating = async(req,res)=>{
   const {id} = req.params;
 
@@ -731,6 +888,21 @@ const getRating = async(req,res)=>{
   }
 
 }
+
+const getRatingMicro= async (req,res)=>{
+  const {id} = req.params;
+  try {
+    const response = await axios.get(`http://localhost:3004/getRating/${id}`);
+    res.json(response.data);
+    console.log("microserver",response.data)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
+
 const yetRating = async (req,res)=>{
   const {rater_user, tatuador_user} =req.body
   console.log(rater_user,tatuador_user)
@@ -746,6 +918,23 @@ const yetRating = async (req,res)=>{
       error: error.message,
     });    
   }
+}
+
+const yetRatingMicro = async (req, res) => {
+  const {rater_user, tatuador_user} =req.body
+  try {
+    const response = await axios.post(
+      'http://localhost:3004/yetrating',
+      {rater_user, tatuador_user}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
 }
 
 const getUsersWithRating = async (req, res) => {
@@ -870,7 +1059,17 @@ module.exports ={
     getUserInfoMicro,
     logoutMicro,
     loginMicro,
-    registerMicro
-
+    registerMicro,
+    followMicro,
+    unfollowMicro,
+    checkFollowingMicro,
+    followerMicro,
+    followedMicro,
+    reactionsMicro,
+    unReactionsMicro,
+    checkreactionsMicro,
+    getReactionMicro,
+    ratingMicro,
+    yetRatingMicro
 
 }

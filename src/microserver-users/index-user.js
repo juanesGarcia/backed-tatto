@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 
 const cors = require('cors')
 
-PORT=3000;
+PORT=3000 ;
 app.use(morgan('dev'))
 //initialize middlewares
 app.use(cookieParser());
