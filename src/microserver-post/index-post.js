@@ -23,6 +23,8 @@ app.use(cors({
 
 //import routes 
 const authRoutes=require('./network');
+app.use(authRoutes);
+
 
 
 

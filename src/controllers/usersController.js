@@ -404,6 +404,25 @@ const verifyToken = async (req, res) => {
       });
     }
   };
+
+  const uploadImagesMicro = async (req, res) => {
+    const { id } = req.params;
+    const{description}= req.body
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/uploadimg/${id}`,
+        {description}
+      );
+  
+      res.json(response.data);
+      console.log('Respuesta del microservicio:', response.data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
+  
+  }
+  
   
   
 const clearAndRecreateUploadsFolder = () => {
@@ -484,6 +503,22 @@ const getImages = async (req, res) => {
   }
 };
 
+const getImagesMicro = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/getimages/${id}`
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const deleteImages = async (req, res) => {
   const { postId } = req.params;
   console.log(postId)
@@ -515,6 +550,22 @@ const deleteImages = async (req, res) => {
   }
 };
 
+const deleteImagesMicro = async (req, res) => {
+  const { postId } = req.params;
+  try {
+    const response = await axios.delete(
+      `http://localhost:3001/deleteimages/${postId}`
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 const editarTitleImages = async (req, res) => {
   const { postId } = req.params;
   const { newDescription ,currentTime} = req.body;
@@ -534,6 +585,23 @@ const editarTitleImages = async (req, res) => {
   }
 }
 
+const editarTitleImagesMicro = async (req, res) => {
+  const { postId } = req.params;
+  const { newDescription ,currentTime} = req.body;
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/editar/${postId}`,
+      { newDescription ,currentTime}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
 
 const follow = async (req, res) =>{
   const {follower_id,followed_id} = req.body;
@@ -838,6 +906,23 @@ const updatelocation = async (req,res)=>{
   }
 }
 
+const updatelocationMicro = async (req, res) => {
+  const {id,lon,lat,cityUser} =req.body
+  try {
+    const response = await axios.post(
+      'http://localhost:3000/updatelocation',
+      {id,lon,lat,cityUser}
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
 
 const rating = async(req,res)=>{
   const {rater_user, tatuador_user,rating} =req.body;
@@ -1016,6 +1101,24 @@ const uploadImagesProfile = async (req, res) => {
   }
 };
 
+const uploadImagesProfileMicro = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/uploadimg/${id}`
+    );
+
+    res.json(response.data);
+    console.log('Respuesta del microservicio:', response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
+
+
 
 
 
@@ -1070,6 +1173,13 @@ module.exports ={
     checkreactionsMicro,
     getReactionMicro,
     ratingMicro,
-    yetRatingMicro
+    yetRatingMicro,
+    getRatingMicro,
+    updatelocationMicro,
+    uploadImagesProfileMicro,
+    uploadImagesMicro,
+    getImagesMicro,
+    deleteImagesMicro,
+    editarTitleImagesMicro
 
 }

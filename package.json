@@ -10,7 +10,8 @@
     "dev:microservicio-auth": "nodemon src/microserver-auth/index-auth.js",
     "dev:microservicio-follow": "nodemon src/microserver-follow/index-follow.js",
     "dev:microservicio-reaction": "nodemon src/microserver-reactions/index-reactions.js",
-    "dev:microservicio-rating": "nodemon src/microserver-rating/index-rating.js"
+    "dev:microservicio-rating": "nodemon src/microserver-rating/index-rating.js",
+    "dev:microservicio-post": "nodemon src/microserver-post/index-post.js"
   },
   "keywords": [],
   "author": "",

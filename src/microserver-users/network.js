@@ -7,7 +7,9 @@ const {
     updateUser,
     deleteUser,
     getUser,
-    getUserInfo
+    getUserInfo,
+    updatelocation,
+    uploadImagesProfile
 
 } =require("../controllers/usersController")
 
@@ -27,6 +29,8 @@ router.put('/user/:id',updateUser);
 router.delete('/user/:id',deleteUser);
 router.get('/user/:id',getUser);
 router.get('/userInfo/:id',getUserInfo);
+router.post('/updatelocation',updatelocation);
+router.post('/uploadimg/:id',uploadImagesProfile);
 
 
 module.exports = router;
