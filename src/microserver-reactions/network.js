@@ -5,7 +5,7 @@ const { checkreactions, unreaction, getReaction, reactions } =require("../contro
 
 
 router.get('/', (req, res) => {
-    res.send('microservicio auth funcionando bien');
+    res.send('microservicio reactions funcionando bien');
 });
 
 router.post('/reaction',reactions);

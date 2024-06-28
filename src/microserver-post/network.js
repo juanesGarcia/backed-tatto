@@ -9,7 +9,9 @@ router.get('/', (req, res) => {
 });
 
 router.post('/upload/:id',uploadImages);
-router.get('/getimages/:id',getImages)
+router.get('/getimages/:id',getImages);
+
+
 router.delete('/deleteimages/:postId', deleteImages);
 router.put('/editar/:postId',editarTitleImages);
 

@@ -147,7 +147,7 @@ const getUserInfo =async(req, res) => {
 const getUserInfoMicro= async (req,res)=>{
   const {id} = req.params;
   try {
-    const response = await axios.get(`http://localhost:3000/user/${id}`);
+    const response = await axios.get(`http://localhost:3000/userInfo/${id}`);
     res.json(response.data);
     console.log("microserver",response.data)
   } catch (error) {
