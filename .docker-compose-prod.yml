@@ -1,0 +1,52 @@
+services:
+  microserver-user:
+    build:
+      context: .
+      dockerfile: Dockerfile.users
+    env_file:
+      - ./.env
+    ports:
+      - "3000:3000"
+  microserver-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth
+    env_file:
+      - ./.env
+    ports:
+      - "3005:3005"
+  microserver-follow:
+    build:
+      context: .
+      dockerfile: Dockerfile.follow
+    env_file:
+      - ./.env
+    ports:
+      - "3002:3002"
+  microserver-post:
+    build:
+      context: .
+      dockerfile: Dockerfile.post
+    env_file:
+      - ./.env
+    ports:
+      - "3001:3001"
+  microserver-rating:
+    build:
+      context: .
+      dockerfile: Dockerfile.rating
+    env_file:
+      - ./.env
+    ports:
+      - "3004:3004"
+  microserver-reactions:
+    build:
+      context: .
+      dockerfile: Dockerfile.reactions
+    env_file:
+      - ./.env
+    ports:
+      - "3003:3003"
+
+
+      
