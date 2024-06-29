@@ -21,7 +21,7 @@ const {
 
 router.get('/users',getUsers);
 router.get('/', (req, res) => {
-    res.send('microservicio funcionando bien');
+    res.send('micro funcionando bien users');
 });
 
 router.get('/userwithrating',getUsersWithRating);

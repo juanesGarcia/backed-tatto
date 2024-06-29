@@ -5,7 +5,7 @@ const { checkreactions, unreaction, getReaction, reactions } =require("../contro
 
 
 router.get('/', (req, res) => {
-    res.send('microservicio reactions funcionando bien');
+    res.send('mtcroservicio reyctions funcionando bien pross GONOREEA hpt');
 });
 
 router.post('/reaction',reactions);

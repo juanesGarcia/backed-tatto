@@ -30,7 +30,7 @@ app.use(authRoutes);
 const appStart =()=>{
     try {
         app.listen(PORT,()=>{
-            console.log(`listener micro2: ${PORT}`);
+            console.log(`listener micro user : ${PORT}`);
         })
         
     } catch (error) {
