@@ -1,35 +1,6 @@
 
 const { Router } = require("express");
 const {
-    getUsers,
-    register,
-    login,
-    protected, 
-    logout,
-    getUser, 
-    updateUser,
-    deleteUser,
-    verifyToken,
-    uploadImages,
-    getImages, 
-    deleteImages,
-    editarTitleImages,
-    follow, 
-    followed,
-    follower,
-    checkFollowingStatus,
-    unfollow,
-    reactions,
-    checkreactions,
-    unreaction,
-    getReaction,
-    updatelocation,
-    rating,
-    getRating,
-    yetRating,
-    getUsersWithRating,
-    uploadImagesProfile,
-    getUserInfo,
     getusersMicroservices,
     main,
     getUsersWithRatingMicro,
@@ -59,7 +30,7 @@ const {
     deleteImagesMicro,
     editarTitleImagesMicro
 
-} =require("../controllers/usersController")
+} =require("../controllers/microserverController")
 const router = Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -77,8 +48,11 @@ const {userAuth} = require("../middlewares/users-middleware");
 
 //router.get('/userwithout',getUsers);
 //router.post('/verify-token',verifyToken );
-router.get('/protect',userAuth,protected);
-router.get('/',main);
+//router.get('/protect',userAuth,protected);
+router.get('/', (req, res) => {
+    res.send('micro funcionando bien main');
+});
+
 router.get('/users',getusersMicroservices);
 router.get('/userwithrating',getUsersWithRatingMicro);
 router.put('/user/:id',userAuth,updateValidator,validationMiddleware,updateUserMicro);
