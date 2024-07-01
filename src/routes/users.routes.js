@@ -79,7 +79,7 @@ router.post('/unFollowUser',unfollow)
 router.get('/followed/:id',followed);
 router.get('/follower/:id',follower);
 router.post('/checkfollowing',checkFollowingStatus);
-router.post('/reactions',reactions);
+router.post('/reaction',reactions);
 router.post('/checkreactions',checkreactions);
 router.post('/unreaction',unreaction);
 router.post('/updatelocation',updatelocation);
