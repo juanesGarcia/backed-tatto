@@ -226,17 +226,6 @@ const verifyToken = async (req, res) => {
     
   
     try {
-      // Iterar sobre cada archivo y subirlo
-      const uploadResults = await Promise.all(
-        req.files.map(async (file) => {
-          const result = await uploadFiles(file);
-          return {
-            originalname: result.uniqueFilename,
-            url: result.url,
-            expires: result.expires,
-          };
-        })
-      );
       const postResult = await pool.query(
         'INSERT INTO posts (title, user_id, status) VALUES ($1, $2, $3) RETURNING id, title, created_at',
         [description, id, 'activo']
@@ -245,19 +234,27 @@ const verifyToken = async (req, res) => {
       const post = postResult.rows[0];
       const postId = post.id;
       console.log(postId);
+  console.log( result.originalname+
+            result.url+
+            postId);
+            const photoInsertPromises = req.files.map(async (file) => {
+            try {
+                const result = await uploadFiles(file); // Asume que esto funciona y devuelve { url, ... }
+                // console.log(`Intentando insertar foto: courtId=${courtId}, url=${result.url}`); // Puedes descomentar para depurar
+                const insertPhotoResult = await pool.query('INSERT INTO photos (court_id, url) VALUES ($1, $2) RETURNING id, url', [
+                    courtId,
+                    result.url
+                ]);
+                return { success: true, data: insertPhotoResult.rows[0] }; // Retorna éxito y datos
+            } catch (photoError) {
+                console.error(`Error al insertar la foto para courtId ${courtId}, originalname ${file.originalname}:`, photoError);
+                return { success: false, error: photoError.message, originalname: file.originalname }; // Retorna fallo y error
+            }
+        });
   
-      // Iterar sobre los resultados y realizar la inserción en la base de datos
-      await Promise.all(
-        uploadResults.map(async (result) => {
-          // Insertar la foto
-          await pool.query('INSERT INTO photos (name, media_url, post_id) VALUES ($1, $2, $3)', [
-            result.originalname,
-            result.url,
-            postId
-          ]);
-        })
-      );
-  
+       const photoInsertResults = await Promise.all(photoInsertPromises);
+        console.log('Todas las inserciones de fotos terminadas. Resultados:', photoInsertResults);
+
       // Obtener información completa del post con fotos
       const postWithPhotos = await pool.query(
         'SELECT p.*, ph.name AS photo_name, ph.media_url AS photo_url ' +
@@ -361,32 +358,41 @@ const getImages = async (req, res) => {
 };
 
 const deleteImages = async (req, res) => {
-  const { postId } = req.params;
-  console.log(postId)
+  const { id, court_id } = req.params;
+
+  const photoIdToUse = id ? String(id).replace(/\s/g, '').trim() : null;
+  const courtIdToUse = court_id ? String(court_id).replace(/\s/g, '').trim() : null;
+
   try {
-    // Obtener información de las imágenes antes de eliminarlas
-    const imagesToDelete = await pool.query('SELECT id,name,media_url FROM photos WHERE post_id = $1', [postId]);
+    if (!photoIdToUse || !courtIdToUse) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan los IDs de la imagen o la cancha en la solicitud.",
+      });
+    }
 
-    // Eliminar imágenes de la base de datos
-    await pool.query('DELETE FROM photos WHERE post_id = $1', [postId]);
-    await pool.query('DELETE FROM posts WHERE id = $1', [postId]);
-
-    // Eliminar archivos físicos del almacenamiento (opcional, dependiendo de tus necesidades)
-    await Promise.all(
-      imagesToDelete.rows.map(async (image) => {
-        if (image.name) {
-          await deleteFileByName(image.name);
-        }
-      })
+    const deleteDbResult = await pool.query(
+      "DELETE FROM photos WHERE id::uuid = $1::uuid AND court_id::uuid = $2::uuid RETURNING id",
+      [photoIdToUse, courtIdToUse]
     );
 
+    if (deleteDbResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "La imagen no fue encontrada o no pertenece a la cancha especificada.",
+      });
+    }
+
     res.json({
-      message: 'Imágenes eliminadas correctamente.',
+      success: true,
+      message: "Imagen eliminada correctamente.",
+      deleted_image_id: photoIdToUse,
     });
   } catch (error) {
-    console.error('Error al eliminar imágenes:', error);
+    console.error(error.message);
     res.status(500).json({
-      error: error,
+      success: false,
+      message: "Error al eliminar la imagen.",
     });
   }
 };
